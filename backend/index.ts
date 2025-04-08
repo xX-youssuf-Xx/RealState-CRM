@@ -1,6 +1,7 @@
 import express from 'express';
 import type { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import path from 'path';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 
@@ -23,6 +24,19 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+
+
+// Important: This serves the uploads directory to make files publicly accessible
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Verify the uploads directory exists
+const fs = require('fs');
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  console.warn('Warning: Uploads directory does not exist at:', uploadsDir);
+  // Optionally create it
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 // Routes
 app.use('/api/auth', authRoutes);

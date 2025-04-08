@@ -1,0 +1,142 @@
+.navbar {
+  background-color: #0a2351; /* Dark blue */
+  color: white;
+  padding: 0.75rem 2rem;
+  direction: rtl; /* RTL for Arabic */
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+.mobileMenuButton {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.authSection {
+  display: flex;
+  align-items: center;
+}
+
+.loginButton {
+  background-color: #d4af37; /* Gold */
+  color: #0a2351; /* Dark blue */
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.loginButton:hover {
+  background-color: #f5cc50; /* Lighter gold */
+  transform: translateY(-2px);
+}
+
+.userMenu {
+  position: relative;
+}
+
+.userButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.userButton:hover {
+  color: #d4af37; /* Gold */
+}
+
+.chevron {
+  transition: transform 0.3s ease;
+}
+
+.chevronUp {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #0a2351; /* Dark blue */
+  border: 1px solid #1a3366;
+  border-radius: 4px;
+  width: 180px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  animation: fadeIn 0.3s ease;
+}
+
+.logoutButton {
+  width: 100%;
+  text-align: right;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  color: #ff6b6b; /* Red for logout */
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.logoutButton:hover {
+  background-color: #1a3366;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .mobileMenuButton {
+    display: block;
+  }
+
+  .authSection {
+    display: none; /* Hide in mobile, will be shown in sidebar */
+  }
+  .container{
+    flex-direction: row-reverse;
+  }
+}
+

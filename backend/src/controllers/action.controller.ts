@@ -142,7 +142,7 @@ export const deleteAction = async (req: Request, res: Response): Promise<void> =
   try {
     const deleted = await ActionModel.delete(id);
     if (deleted) {
-      res.status(204).send();
+      res.status(200).json({ message: 'deleted successfully ' });
     } else {
       res.status(404).json({ message: 'Action not found' });
     }

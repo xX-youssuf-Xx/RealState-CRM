@@ -5,7 +5,7 @@ let salesEmployeeQueue: Employee[] = [];
 let currentSalesEmployeeIndex = 0;
 
 async function loadSalesEmployees() {
-  salesEmployeeQueue = await EmployeeModel.getByRole('Sales');
+  salesEmployeeQueue = await EmployeeModel.getByRole('SALES');
   currentSalesEmployeeIndex = 0; // Reset the index on load
 }
 

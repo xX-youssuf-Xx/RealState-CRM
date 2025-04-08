@@ -7,9 +7,9 @@ const router = express.Router();
 router.use(authenticate);
 
 // Admin-specific sales report
-router.get('/admin/sales', authorize(['Admin']), getAdminTotalSales);
+router.get('/admin/sales', authorize(['ADMIN']), getAdminTotalSales);
 
 // Salesman-specific sales report
-router.get('/salesman/me/sales', authorize(['Admin', 'Sales']), getSalesmanTotalSales);
+router.get('/salesman/me/sales', authorize(['ADMIN', 'SALES']), getSalesmanTotalSales);
 
 export default router;

@@ -1,0 +1,633 @@
+.unitsPage {
+    padding: 1.5rem;
+    direction: rtl;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .titleContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .title {
+    color: #0a2351;
+    font-size: 1.75rem;
+    margin: 0;
+  }
+  
+  .projectName {
+    color: #666;
+    font-size: 1.2rem;
+    margin: 0.25rem 0 0 0;
+  }
+  
+  .headerActions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .searchContainer {
+    position: relative;
+    width: 250px;
+  }
+  
+  .searchIcon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+  
+  .searchInput:focus {
+    outline: none;
+    border-color: #0a2351;
+    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+  }
+  
+  .filterButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+  }
+  
+  .filterButton:hover {
+    background-color: #e5e5e5;
+  }
+  
+  .filterBadge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    background-color: #d4af37;
+    border-radius: 50%;
+  }
+  
+  .addButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #d4af37;
+    color: #0a2351;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .addButton:hover {
+    background-color: #f5cc50;
+  }
+  
+  .addButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .filterIndicator {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f5f5f5;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  
+  .resetButton {
+    background: none;
+    border: none;
+    color: #0a2351;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .resetButton:hover {
+    background-color: rgba(10, 35, 81, 0.1);
+  }
+  
+  .emptyState {
+    text-align: center;
+    padding: 3rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    color: #666;
+  }
+  
+  .emptyState p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .unitsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  /* Base unit card styles */
+  .unitCard {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .unitCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Status-specific card styles */
+  .availableUnit {
+    border-right: 4px solid #0a2351; /* Green */
+  }
+  
+  .reservedUnit {
+    border-right: 4px solid #0a2351; /* Orange */
+  }
+  
+  .soldUnit {
+    border-right: 4px solid #0a2351; /* Red */
+  }
+  
+  /* Header styles */
+  .unitHeader {
+    background-color: #0a2351;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .availableHeader {
+    background-color: #0a2351; /* Green */
+  }
+  
+  .reservedHeader {
+    background-color: #0a2351; /* Orange */
+  }
+  
+  .soldHeader {
+    background-color: #0a2351; /* Red */
+  }
+  
+  .unitName {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .editButton,
+  .deleteButton,
+  .infoButton {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .infoButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .editButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .deleteButton:hover {
+    background-color: rgba(255, 0, 0, 0.2);
+  }
+  
+  .unitDetails {
+    padding: 1rem;
+  }
+  
+  .detailItem {
+    margin-bottom: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .detailItem:last-child {
+    margin-bottom: 0;
+  }
+  
+  .detailLabel {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .detailValue {
+    color: #333;
+  }
+  
+  /* Status-specific text styles */
+  .availableStatus {
+    color: #4caf50; /* Green */
+    font-weight: bold;
+  }
+  
+  .reservedStatus {
+    color: #ff9800; /* Orange */
+    font-weight: bold;
+  }
+  
+  .soldStatus {
+    color: #f44336; /* Red */
+    font-weight: bold;
+  }
+  
+  /* Modal Styles */
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+  
+  .modal {
+    background-color: white;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    background-color: #0a2351;
+    color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .modalHeader h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .closeButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .form,
+  .filterForm {
+    padding: 1.5rem;
+  }
+  
+  .formGroup {
+    margin-bottom: 1.25rem;
+  }
+  
+  .formGroupRow {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .formGroupHalf {
+    flex: 1;
+  }
+  
+  .formGroup label,
+  .formGroupHalf label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .formGroup input,
+  .formGroup select,
+  .formGroup textarea,
+  .formGroupHalf input,
+  .formGroupHalf select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  
+  .formGroup input:focus,
+  .formGroup select:focus,
+  .formGroup textarea:focus,
+  .formGroupHalf input:focus,
+  .formGroupHalf select:focus {
+    outline: none;
+    border-color: #0a2351;
+    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+  }
+  
+  .formActions,
+  .filterActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .cancelButton {
+    background-color: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cancelButton:hover {
+    background-color: #e5e5e5;
+  }
+  
+  .cancelButton:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+  }
+  
+  .submitButton,
+  .applyFilterButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #d4af37;
+    color: #0a2351;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submitButton:hover,
+  .applyFilterButton:hover {
+    background-color: #f5cc50;
+  }
+  
+  .submitButton:disabled,
+  .applyFilterButton:disabled {
+    background-color: #cccccc;
+    color: #666;
+    cursor: not-allowed;
+  }
+  
+  .resetFilterButton {
+    background-color: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .resetFilterButton:hover {
+    background-color: #e5e5e5;
+  }
+  
+  /* Info Modal Styles */
+  .infoContent {
+    padding: 1.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  
+  .infoSection {
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sectionTitle {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    color: #0a2351;
+    border-bottom: 2px solid #d4af37;
+    padding-bottom: 0.5rem;
+  }
+  
+  .infoItem {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .infoItem:last-child {
+    margin-bottom: 0;
+  }
+  
+  .infoLabel {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 0.25rem;
+  }
+  
+  .infoValue {
+    color: #333;
+  }
+  
+  .notesBox {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    white-space: pre-wrap;
+  }
+  
+  .infoActions {
+    padding: 1rem 1.5rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #eee;
+  }
+  
+  .closeInfoButton,
+  .editInfoButton {
+    background-color: #0a2351;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .closeInfoButton:hover,
+  .editInfoButton:hover {
+    background-color: #0d2b63;
+  }
+  
+  /* Confirmation Modal */
+  .confirmModal {
+    background-color: white;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .confirmModal h2 {
+    color: #0a2351;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .confirmModal p {
+    margin-bottom: 1.5rem;
+    color: #555;
+    line-height: 1.5;
+  }
+  
+  .confirmActions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .deleteConfirmButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #e53935;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .deleteConfirmButton:hover {
+    background-color: #f44336;
+  }
+  
+  .deleteConfirmButton:disabled {
+    background-color: #ffcdd2;
+    color: #b71c1c;
+    cursor: not-allowed;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .headerActions {
+      width: 100%;
+      flex-direction: column;
+    }
+  
+    .searchContainer {
+      width: 100%;
+    }
+  
+    .unitsGrid {
+      grid-template-columns: 1fr;
+    }
+  
+    .formGroupRow {
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+  
+    .formActions,
+    .filterActions,
+    .confirmActions,
+    .infoActions {
+      flex-direction: column;
+    }
+  
+    .cancelButton,
+    .submitButton,
+    .applyFilterButton,
+    .resetFilterButton,
+    .deleteConfirmButton,
+    .closeInfoButton,
+    .editInfoButton {
+      width: 100%;
+    }
+  }
+  

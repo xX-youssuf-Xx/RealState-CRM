@@ -17,8 +17,8 @@ router.use(authenticate); // Apply authentication to all unit routes
 router.get('/', getAllUnits);
 router.get('/:id', getUnitById);
 router.get('/project/:projectId', getUnitsByProjectId); // Get units by project ID
-router.post('/', authorize(['Admin']), createUnit);
-router.patch('/:id', authorize(['Admin']), updateUnit);
-router.delete('/:id', authorize(['Admin']), deleteUnit);
+router.post('/', authorize(['ADMIN']), createUnit);
+router.patch('/:id', authorize(['ADMIN']), updateUnit);
+router.delete('/:id', authorize(['ADMIN']), deleteUnit);
 
 export default router;

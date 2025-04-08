@@ -1,0 +1,105 @@
+/* src/components/Footer/Footer.module.css */
+.footer {
+  background-color: #0a2351; /* Dark blue */
+  color: white;
+  padding: 0 1rem; /* Add some horizontal padding */
+  direction: rtl; /* RTL for Arabic */
+  height: 65px; /* Increased height */
+  display: flex;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle top border */
+}
+
+.footerContainer {
+  width: 100%; /* Use full width */
+  max-width: 1600px; /* Keep max width */
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between; /* Space out items */
+  align-items: center;
+  gap: 1rem; /* Add gap between items */
+}
+
+/* Copyright - Visually on the RIGHT in RTL */
+.copyright {
+  font-size: 0.8rem;
+  margin: 0;
+  text-align: left; /* Aligns text to the "end" in RTL (visually right) */
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+/* Developer Credit - Visually in the CENTER */
+.developerCredit {
+  font-size: 0.9rem;
+  text-align: center;
+  flex-grow: 1; /* Allow this to take up space */
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+.developerCredit a {
+  color: #d4af37; /* Gold color for link */
+  text-decoration: none;
+  font-weight: bold;
+}
+.developerCredit a:hover {
+   text-decoration: underline;
+}
+
+
+/* Social Icons - Visually on the LEFT in RTL */
+.socialIcons {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Space between icons */
+  justify-content: flex-end; /* Aligns items to the "start" in RTL (visually left) */
+   flex-shrink: 0; /* Prevent shrinking */
+}
+
+.socialIcons a {
+  color: white;
+  font-size: 1.2rem; /* Slightly larger icons */
+  line-height: 1; /* Ensure icons align well */
+  display: inline-block; /* Needed for proper spacing/alignment */
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.socialIcons a:hover {
+  color: #d4af37; /* Gold on hover */
+  transform: scale(1.1); /* Slight scale effect on hover */
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer {
+    height: auto; /* Auto height for stacking */
+    padding: 1rem; /* More padding on small screens */
+  }
+
+  .footerContainer {
+    flex-direction: column; /* Stack items vertically */
+    gap: 0.8rem; /* Adjust gap for vertical stacking */
+  }
+
+  /* Center everything when stacked */
+  .copyright,
+  .developerCredit,
+  .socialIcons {
+    text-align: center;
+    width: 100%; /* Take full width */
+    justify-content: center; /* Center social icons */
+  }
+
+   .developerCredit {
+     white-space: normal; /* Allow wrapping */
+     order: 1; /* Developer credit first */
+   }
+   .socialIcons {
+     order: 2; /* Social icons second */
+   }
+   .copyright {
+      order: 3; /* Copyright last */
+      font-size: 0.75rem;
+   }
+
+}

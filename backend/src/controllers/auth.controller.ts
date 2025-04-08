@@ -21,6 +21,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       res.status(401).json({ message: "Invalid credentials" });
       return;
     }
+    if(employee.role === "DELETED") {
+      res.status(401).json({ message: "user not allowed" });
+      return;
+    }
+    
     const comparisonResult = await bcryptjs.compare(
       password,
       employee.hashedpass
@@ -34,9 +39,17 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       const token = jwt.sign(
         { id: employee.id, role: employee.role },
         jwtSecret,
-        { expiresIn: "1h" }
+        { expiresIn: "1d" }
       );
-      res.status(200).json({ token });
+      res.status(200).json({ 
+        token: token,
+        employee: { 
+          id: employee.id,
+          name: employee.name,
+          role: employee.role,
+          number: employee.number,
+        }
+       });
     } else {
       res
         .status(401)

@@ -14,10 +14,10 @@ const router = express.Router();
 router.use(authenticate);
 
 // Only admins should be able to list, create, update, and delete employees (example authorization)
-router.get('/', authorize(['Admin']), getAllEmployees);
-router.get('/:id', authorize(['Admin']), getEmployeeById);
-router.post('/', authorize(['Admin']), createEmployee);
-router.patch('/:id', authorize(['Admin']), updateEmployee);
-router.delete('/:id', authorize(['Admin']), deleteEmployee);
+router.get('/', authorize(['ADMIN']), getAllEmployees);
+router.get('/:id', authorize(['ADMIN']), getEmployeeById);
+router.post('/', authorize(['ADMIN']), createEmployee);
+router.patch('/:id', authorize(['ADMIN']), updateEmployee);
+router.delete('/:id', authorize(['ADMIN']), deleteEmployee);
 
 export default router;

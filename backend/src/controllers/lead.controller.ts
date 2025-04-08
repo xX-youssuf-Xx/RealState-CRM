@@ -113,7 +113,7 @@ export const deleteLead = async (req: Request, res: Response): Promise<void> => 
   try {
     const deleted = await LeadModel.delete(id);
     if (deleted) {
-      res.status(204).send(); // No content for successful deletion
+      res.status(200).json({ message: 'deleted successfully ' }); // No content for successful deletion
     } else {
       res.status(404).json({ message: 'Lead not found' });
     }

@@ -22,8 +22,8 @@ router.get('/customer/:customerId', getActionsByCustomerId);
 router.get('/sales/:salesId', getActionsBySalesId);
 router.get('/project/:projectId', getActionsByProjectId);
 router.get('/unit/:unitId', getActionsByUnitId);
-router.post('/', authorize(['Admin', 'Sales']), createAction); // Example authorization
-router.patch('/:id', authorize(['Admin', 'Sales']), updateAction); // Example authorization
-router.delete('/:id', authorize(['Admin']), deleteAction);
+router.post('/', authorize(['ADMIN', 'SALES']), createAction); // Example authorization
+router.patch('/:id', authorize(['ADMIN', 'SALES']), updateAction); // Example authorization
+router.delete('/:id', authorize(['ADMIN']), deleteAction);
 
 export default router;

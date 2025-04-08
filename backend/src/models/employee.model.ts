@@ -14,7 +14,7 @@ export interface Employee {
 
 export class EmployeeModel {
   static async getAll(): Promise<Employee[]> {
-    const result = await db.query('SELECT id, name, number, role, created_at, updated_at FROM employees'); // Exclude hashedpass for general listing
+    const result = await db.query('SELECT id, name, number, role, notes, created_at, updated_at FROM employees'); // Exclude hashedpass for general listing
     return result.rows;
   } 
 
@@ -24,7 +24,7 @@ export class EmployeeModel {
   }
   
   static async getById(id: number): Promise<Employee | null> {
-    const result = await db.query('SELECT id, name, number, role, created_at, updated_at FROM employees WHERE id = $1', [id]); // Exclude hashedpass
+    const result = await db.query('SELECT id, name, number, role, notes, created_at, updated_at FROM employees WHERE id = $1', [id]); // Exclude hashedpass
     return result.rows[0] || null;
   }
 
@@ -73,7 +73,10 @@ export class EmployeeModel {
   }
 
   static async delete(id: number): Promise<boolean> {
-    const result = await db.query('DELETE FROM employees WHERE id = $1 RETURNING id', [id]);
+    const result = await db.query(
+      'UPDATE employees SET role = $1 WHERE id = $2 RETURNING id', 
+      ['DELETED', id]
+    );
     return result.rows.length > 0;
   }
 }

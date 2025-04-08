@@ -20,8 +20,8 @@ router.get('/:id', getTaskById);
 router.get('/customer/:customerId', getTasksByCustomerId);
 router.get('/sales/:salesId', getTasksBySalesId);
 router.get('/action/:actionId', getTasksByActionId);
-router.post('/', authorize(['Admin', 'Sales']), createTask); // Example authorization
-router.patch('/:id', authorize(['Admin', 'Sales']), updateTask); // Example authorization
-router.delete('/:id', authorize(['Admin']), deleteTask);
+router.post('/', authorize(['ADMIN', 'SALES']), createTask); // Example authorization
+router.patch('/:id', authorize(['ADMIN', 'SALES']), updateTask); // Example authorization
+router.delete('/:id', authorize(['ADMIN']), deleteTask);
 
 export default router;

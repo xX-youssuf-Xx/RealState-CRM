@@ -1,0 +1,23 @@
+/* src/styles/global.css */
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    scrollbar-width: none;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-color: #d4af37 #f4f7f6; /* Gold on light background */
+  }
+  
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }

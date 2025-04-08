@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    /* Base Options */
+    "esModuleInterop": true, // Enables compatibility with CommonJS modules
+    "skipLibCheck": true, // Skip type checking of declaration files (speeds up compilation)
+    "target": "ESNext", // Target latest ECMAScript features
+    "allowJs": true, // Allow JavaScript files to be compiled
+    "resolveJsonModule": true, // Allow importing JSON files
+    "moduleDetection": "force", // Treat files as modules
+    "isolatedModules": true, // Ensure files can be safely compiled separately (needed by many bundlers)
+
+    /* Strict Type Checking */
+    "strict": true, // Enable all strict type-checking options
+    "noUnusedLocals": true, // Report errors on unused local variables
+    "noUnusedParameters": true, // Report errors on unused parameters
+    "noFallthroughCasesInSwitch": true, // Report errors for fallthrough cases in switch statements
+
+    /* Module Resolution */
+    "module": "ESNext", // Use ES module system
+    "moduleResolution": "bundler", // Mimic bundler resolution (modern, preferred)
+
+    /* DOM & React */
+    "jsx": "react-jsx", // Use React's modern JSX transform
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], // Include type definitions for DOM and modern JS
+
+    /* Output */
+    "noEmit": true, // Do not emit JavaScript output (Bun handles bundling/transpilation)
+
+    /* Path Aliases (Optional but useful later) */
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@/*": ["./src/*"]
+    // }
+
+  },
+  "include": ["src"], // *** CRITICAL: Tells TS to include all files in the src directory ***
+  "exclude": ["node_modules"] // Standard exclusion
+}

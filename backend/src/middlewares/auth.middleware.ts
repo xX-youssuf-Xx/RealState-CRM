@@ -49,11 +49,21 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
 export const authorize = (roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const user = (req as AuthRequest).user;
-
-    if (user && roles.includes(user.role)) {
+        if (user && roles.includes(user.role)) {
       next();
     } else {
       res.sendStatus(403); // Forbidden
+    }
+  };
+};
+
+export const checkDeleted = () => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    const user = (req as AuthRequest).user;
+        if (user && (user.role !== 'DELETED')) {
+      next();
+    } else {
+      res.sendStatus(403); 
     }
   };
 };

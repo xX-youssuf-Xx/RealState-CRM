@@ -26,8 +26,8 @@ const upload = multer({ storage: storage });
 
 router.get('/', getAllProjects);
 router.get('/:id', getProjectById);
-router.post('/', authorize(['Admin']), upload.array('images', 10), createProject); // 'images' is the field name for file uploads, max 10 files
-router.patch('/:id', authorize(['Admin']), upload.array('newImages', 10), updateProject); // 'newImages' for adding new images
-router.delete('/:id', authorize(['Admin']), deleteProject);
+router.post('/', authorize(['ADMIN']), upload.array('images', 10), createProject); // 'images' is the field name for file uploads, max 10 files
+router.patch('/:id', authorize(['ADMIN']), upload.array('newImages', 10), updateProject); // 'newImages' for adding new images
+router.delete('/:id', authorize(['ADMIN']), deleteProject);
 
 export default router;

@@ -1,0 +1,830 @@
+.leadsPage {
+    padding: 1.5rem;
+    direction: rtl;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .title {
+    color: #0a2351;
+    font-size: 1.75rem;
+    margin: 0;
+  }
+  
+  .headerActions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .searchContainer {
+    position: relative;
+    width: 250px;
+  }
+  
+  .searchIcon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+  
+  .searchInput:focus {
+    outline: none;
+    border-color: #0a2351;
+    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+  }
+  
+  .filterButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+  }
+  
+  .filterButton:hover {
+    background-color: #e5e5e5;
+  }
+  
+  .filterBadge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    background-color: #d4af37;
+    border-radius: 50%;
+  }
+  
+  .addButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #d4af37;
+    color: #0a2351;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .addButton:hover {
+    background-color: #f5cc50;
+  }
+  
+  .addButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .filterIndicator {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f5f5f5;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+  
+  .resetButton {
+    background: none;
+    border: none;
+    color: #0a2351;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .resetButton:hover {
+    background-color: rgba(10, 35, 81, 0.1);
+  }
+  
+  .emptyState {
+    text-align: center;
+    padding: 3rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    color: #666;
+  }
+  
+  .emptyState p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .leadsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  /* Base lead card styles */
+  .leadCard {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .leadCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* State-specific card styles */
+  .newLead {
+    border-right: 4px solid #0a2351; /* Blue */
+  }
+  
+  .contactedLead {
+    border-right: 4px solid #9c27b0; /* Purple */
+  }
+  
+  .interestedLead {
+    border-right: 4px solid #d4af37; /* Gold */
+  }
+  
+  .qualifiedLead {
+    border-right: 4px solid #ff9800; /* Orange */
+  }
+  
+  .wonLead {
+    border-right: 4px solid #4caf50; /* Green */
+  }
+  
+  .lostLead {
+    border-right: 4px solid #f44336; /* Red */
+  }
+  
+  /* Header styles */
+  .leadHeader {
+    background-color: #0a2351;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .newHeader {
+    background-color: #0a2351; /* Blue */
+  }
+  
+  .contactedHeader,
+  .follow_upHeader {
+    background-color: #9c27b0; /* Purple */
+  }
+  
+  .interestedHeader,
+  .visitingHeader,
+  .meetingHeader {
+    background-color: #d4af37; /* Gold */
+    color: #0a2351;
+  }
+  
+  .negotiatingHeader,
+  .qualifiedHeader {
+    background-color: #ff9800; /* Orange */
+  }
+  
+  .closed_wonHeader {
+    background-color: #4caf50; /* Green */
+  }
+  
+  .closed_lostHeader {
+    background-color: #f44336; /* Red */
+  }
+  
+  .leadName {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .editButton,
+  .deleteButton,
+  .infoButton {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .interestedHeader .editButton,
+  .interestedHeader .deleteButton,
+  .interestedHeader .infoButton,
+  .visitingHeader .editButton,
+  .visitingHeader .deleteButton,
+  .visitingHeader .infoButton,
+  .meetingHeader .editButton,
+  .meetingHeader .deleteButton,
+  .meetingHeader .infoButton {
+    color: #0a2351;
+  }
+  
+  .infoButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .editButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .deleteButton:hover {
+    background-color: rgba(255, 0, 0, 0.2);
+  }
+  
+  .leadDetails {
+    padding: 1rem;
+  }
+  
+  .detailItem {
+    margin-bottom: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .detailItem:last-child {
+    margin-bottom: 0;
+  }
+  
+  .detailLabel {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .detailValue {
+    color: #333;
+  }
+  
+  .phoneActions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .phoneButtons {
+    display: flex;
+    gap: 0.25rem;
+  }
+  
+  .callButton,
+  .whatsappButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    color: white;
+    transition: background-color 0.2s ease;
+  }
+  
+  .callButton {
+    background-color: #4caf50; /* Green */
+  }
+  
+  .whatsappButton {
+    background-color: #25d366; /* WhatsApp green */
+  }
+  
+  .callButton:hover {
+    background-color: #388e3c;
+  }
+  
+  .whatsappButton:hover {
+    background-color: #1da851;
+  }
+  
+  /* Add styles for the action buttons container and details button */
+.actionButtons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .transferButton,
+  .detailsButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    flex: 1;
+    text-decoration: none;
+  }
+  
+  .transferButton:hover {
+    background-color: #e5e5e5;
+  }
+  
+  .detailsButton {
+    background-color: #0a2351;
+    color: white;
+  }
+  
+  .detailsButton:hover {
+    background-color: #0d2b63;
+  }
+  
+  /* Update the existing transferButton style to remove margin-top */
+  .transferButton {
+    margin-top: 0;
+  }
+  
+  .transferButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .transferButton:hover {
+    background-color: #e5e5e5;
+  }
+  
+  /* State-specific text styles */
+  .newState {
+    color: #2196f3; /* Blue */
+    font-weight: bold;
+  }
+  
+  .contactedState,
+  .follow_upState {
+    color: #9c27b0; /* Purple */
+    font-weight: bold;
+  }
+  
+  .interestedState,
+  .visitingState,
+  .meetingState {
+    color: #d4af37; /* Gold */
+    font-weight: bold;
+  }
+  
+  .negotiatingState,
+  .qualifiedState {
+    color: #ff9800; /* Orange */
+    font-weight: bold;
+  }
+  
+  .closed_wonState {
+    color: #4caf50; /* Green */
+    font-weight: bold;
+  }
+  
+  .closed_lostState {
+    color: #f44336; /* Red */
+    font-weight: bold;
+  }
+  
+  /* Modal Styles */
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+  
+  .modal {
+    background-color: white;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  .modal::-webkit-scrollbar {
+    width: 0; /* Firefox */
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    background-color: #0a2351;
+    color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .modalHeader h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .closeButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .interestedHeader .closeButton,
+  .visitingHeader .closeButton,
+  .meetingHeader .closeButton {
+    color: #0a2351;
+  }
+  
+  .interestedHeader .closeButton:hover,
+  .visitingHeader .closeButton:hover,
+  .meetingHeader .closeButton:hover {
+    background-color: rgba(10, 35, 81, 0.1);
+  }
+  
+  .form,
+  .filterForm {
+    padding: 1.5rem;
+  }
+  
+  .formGroup {
+    margin-bottom: 1.25rem;
+  }
+  
+  .formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .formGroup input,
+  .formGroup select,
+  .formGroup textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  
+  .formGroup input:focus,
+  .formGroup select:focus,
+  .formGroup textarea:focus {
+    outline: none;
+    border-color: #0a2351;
+    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+  }
+  
+  .formActions,
+  .filterActions,
+  .transferActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .cancelButton {
+    background-color: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cancelButton:hover {
+    background-color: #e5e5e5;
+  }
+  
+  .cancelButton:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+  }
+  
+  .submitButton,
+  .applyFilterButton,
+  .transferConfirmButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #d4af37;
+    color: #0a2351;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submitButton:hover,
+  .applyFilterButton:hover,
+  .transferConfirmButton:hover {
+    background-color: #f5cc50;
+  }
+  
+  .submitButton:disabled,
+  .applyFilterButton:disabled,
+  .transferConfirmButton:disabled {
+    background-color: #cccccc;
+    color: #666;
+    cursor: not-allowed;
+  }
+  
+  .resetFilterButton {
+    background-color: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .resetFilterButton:hover {
+    background-color: #e5e5e5;
+  }
+  
+  /* Info Modal Styles */
+  .infoModal {
+    background-color: white;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .infoModal::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  
+  .infoContent {
+    padding: 0 1.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .infoContent::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  
+  .infoSection {
+    margin: 1.5rem 0;
+    padding: 1.25rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sectionTitle {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    color: #0a2351;
+    border-bottom: 2px solid #d4af37;
+    padding-bottom: 0.5rem;
+  }
+  
+  .infoItem {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .infoItem:last-child {
+    margin-bottom: 0;
+  }
+  
+  .infoLabel {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 0.25rem;
+  }
+  
+  .infoValue {
+    color: #333;
+  }
+  
+  .notesBox {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    white-space: pre-wrap;
+  }
+  
+  .infoActions {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #eee;
+  }
+  
+  .closeInfoButton,
+  .editInfoButton {
+    background-color: #0a2351;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+  }
+  
+  .closeInfoButton:hover,
+  .editInfoButton:hover {
+    background-color: #0d2b63;
+  }
+  
+  /* Transfer Modal Styles */
+  .transferModal {
+    background-color: white;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .transferModal h2 {
+    color: #0a2351;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .transferModal p {
+    margin-bottom: 1.5rem;
+    color: #555;
+    line-height: 1.5;
+  }
+  
+  /* Confirmation Modal */
+  .confirmModal {
+    background-color: white;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .confirmModal h2 {
+    color: #0a2351;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .confirmModal p {
+    margin-bottom: 1.5rem;
+    color: #555;
+    line-height: 1.5;
+  }
+  
+  .confirmActions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .deleteConfirmButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #e53935;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .deleteConfirmButton:hover {
+    background-color: #f44336;
+  }
+  
+  .deleteConfirmButton:disabled {
+    background-color: #ffcdd2;
+    color: #b71c1c;
+    cursor: not-allowed;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .headerActions {
+      width: 100%;
+      flex-direction: column;
+    }
+  
+    .searchContainer {
+      width: 100%;
+    }
+  
+    .leadsGrid {
+      grid-template-columns: 1fr;
+    }
+  
+    .formActions,
+    .filterActions,
+    .transferActions,
+    .confirmActions,
+    .infoActions {
+      flex-direction: column;
+    }
+  
+    .cancelButton,
+    .submitButton,
+    .applyFilterButton,
+    .resetFilterButton,
+    .transferConfirmButton,
+    .deleteConfirmButton,
+    .closeInfoButton,
+    .editInfoButton {
+      width: 100%;
+    }
+  }
+  

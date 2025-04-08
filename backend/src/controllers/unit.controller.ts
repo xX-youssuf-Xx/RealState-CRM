@@ -95,7 +95,7 @@ export const deleteUnit = async (req: Request, res: Response): Promise<void> => 
   try {
     const deleted = await UnitModel.delete(id);
     if (deleted) {
-      res.status(204).send();
+      res.status(200).json({ message: 'deleted successfully ' });
     } else {
       res.status(404).json({ message: 'Unit not found' });
     }

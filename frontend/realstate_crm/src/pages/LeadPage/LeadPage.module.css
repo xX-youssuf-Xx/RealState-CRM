@@ -1,0 +1,616 @@
+.actionsPage {
+    padding: 1.5rem;
+    direction: rtl;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .title {
+    color: #0a2351;
+    font-size: 1.75rem;
+    margin: 0;
+  }
+  
+  .headerActions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .searchContainer {
+    position: relative;
+    width: 250px;
+  }
+  
+  .searchIcon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+  
+  .searchInput:focus {
+    outline: none;
+    border-color: #0a2351;
+    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+  }
+  
+  .filterContainer {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  .filterIcon {
+    color: #666;
+  }
+  
+  .filterSelect {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    min-width: 160px;
+    background-color: white;
+    color: #333;
+  }
+  
+  .filterSelect:focus {
+    outline: none;
+    border-color: #0a2351;
+    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+  }
+  
+  .addButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #d4af37;
+    color: #0a2351;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .addButton:hover {
+    background-color: #f5cc50;
+  }
+  
+  .addButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .emptyState {
+    text-align: center;
+    padding: 3rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    color: #666;
+  }
+  
+  .emptyState p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .actionsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .actionCard {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .actionCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .actionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: #0a2351;
+    color: white;
+  }
+  
+  .actionDate {
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .infoButton {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .infoButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .actionContent {
+    padding: 1rem;
+  }
+  
+  .actionStatusFlow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .stateBox {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+    text-align: center;
+  }
+  
+  .successState {
+    background-color: #e8f5e9;
+    border: 1px solid #81c784;
+  }
+  
+  .dangerState {
+    background-color: #ffebee;
+    border: 1px solid #e57373;
+  }
+  
+  .activeState {
+    background-color: #e3f2fd;
+    border: 1px solid #64b5f6;
+  }
+  
+  .stateName {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.25rem;
+  }
+  
+  .substateName {
+    font-size: 0.8rem;
+    color: #666;
+  }
+  
+  .arrowIcon {
+    color: #0a2351;
+    transform: rotate(180deg);
+  }
+  
+  .actionDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .detailItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .detailLabel {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .detailValue {
+    color: #333;
+  }
+  
+  .notesItem {
+    margin-top: 0.5rem;
+  }
+  
+  .notesText {
+    color: #333;
+    font-style: italic;
+    display: block;
+    margin-top: 0.25rem;
+    white-space: pre-line;
+  }
+  
+  /* Modal Styles */
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+  
+  .modal {
+    background-color: white;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    background-color: #0a2351;
+    color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .modalHeader h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .closeButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Info Modal Content */
+  .infoContent {
+    padding: 1.5rem;
+  }
+  
+  .infoSection {
+    margin-bottom: 1.5rem;
+  }
+  
+  .infoSection h3 {
+    color: #0a2351;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #d4af37;
+    padding-bottom: 0.5rem;
+  }
+  
+  .infoItem {
+    margin-bottom: 0.75rem;
+  }
+  
+  .infoLabel {
+    font-weight: bold;
+    color: #555;
+    display: inline-block;
+    width: 35%;
+  }
+  
+  .infoValue {
+    color: #333;
+    display: inline-block;
+    width: 65%;
+  }
+  
+  .stateChangeInfo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .stateInfoBox {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    padding: 1rem;
+    flex: 1;
+    text-align: center;
+  }
+  
+  .prevStateBox {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+  }
+  
+  .newStateBox {
+    background-color: #e3f2fd;
+    border: 1px solid #64b5f6;
+  }
+  
+  .stateInfoBox h4 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #0a2351;
+  }
+  
+  .arrowIconLarge {
+    color: #0a2351;
+    margin: 0 1rem;
+    transform: rotate(180deg);
+  }
+  
+  .notesBox {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 1rem;
+    white-space: pre-line;
+  }
+  
+  .modalFooter {
+    padding: 1rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+  
+  .closeModalButton {
+    background-color: #0a2351;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .closeModalButton:hover {
+    background-color: #0d2b63;
+  }
+  
+  /* Form Styles */
+  .form {
+    padding: 1.5rem;
+  }
+  
+  .formSection {
+    margin-bottom: 1.5rem;
+  }
+  
+  .formSection h3 {
+    color: #0a2351;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #d4af37;
+    padding-bottom: 0.5rem;
+  }
+  
+  .stateChangeForm {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .stateFormGroup {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .stateFormGroup label {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .stateSelect,
+  .substateSelect {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: white;
+    color: #333;
+    width: 100%;
+  }
+  
+  .stateSelect:focus,
+  .substateSelect:focus {
+    outline: none;
+    border-color: #0a2351;
+    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+  }
+  
+  .stateSelect:disabled,
+  .substateSelect:disabled {
+    background-color: #f5f5f5;
+    color: #777;
+  }
+  
+  .substateGroup {
+    margin-top: 0.5rem;
+  }
+  
+  .formGroup {
+    margin-bottom: 1.25rem;
+  }
+  
+  .formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .formInput {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .formInput:focus {
+    outline: none;
+    border-color: #0a2351;
+    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+  }
+  
+  .formTextarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .formTextarea:focus {
+    outline: none;
+    border-color: #0a2351;
+    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+  }
+  
+  .requiredMark {
+    color: #e53935;
+    margin-right: 0.25rem;
+  }
+  
+  .cancelButton {
+    background-color: #f5f5f5;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cancelButton:hover {
+    background-color: #e5e5e5;
+  }
+  
+  .cancelButton:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+  }
+  
+  .submitButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #d4af37;
+    color: #0a2351;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submitButton:hover {
+    background-color: #f5cc50;
+  }
+  
+  .submitButton:disabled {
+    background-color: #cccccc;
+    color: #666;
+    cursor: not-allowed;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .headerActions {
+      width: 100%;
+      flex-direction: column;
+    }
+  
+    .searchContainer,
+    .filterContainer {
+      width: 100%;
+    }
+  
+    .actionsContainer {
+      grid-template-columns: 1fr;
+    }
+  
+    .actionStatusFlow {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .arrowIcon {
+      margin: 0.5rem 0;
+    }
+  
+    .stateChangeForm {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+  
+    .arrowIconLarge {
+      margin: 0.5rem 0;
+    }
+  
+    .stateChangeInfo {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+  
+    .modalFooter {
+      flex-direction: column;
+    }
+  
+    .cancelButton,
+    .submitButton,
+    .closeModalButton {
+      width: 100%;
+    }
+  }
