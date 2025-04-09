@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import styles from './Loading.module.css';
 
@@ -7,12 +7,6 @@ interface LoadingProps {
 }
 
 const Loading: React.FC<LoadingProps> = ({ isVisible }) => {
-  const [ DotLottie, setDotLottie] = useState<any>(null);
-  
-  const dotLottieRefCallback = (dotLottieInstance: any) => {
-    setDotLottie(dotLottieInstance);
-  };
-
   if (!isVisible) return null;
   
   return ( 
@@ -21,7 +15,6 @@ const Loading: React.FC<LoadingProps> = ({ isVisible }) => {
         src="/blueLoading.lottie"
         loop
         autoplay
-        dotLottieRefCallback={dotLottieRefCallback}
         backgroundColor="transparent"
         style={{ width: '600px', height: '600px' }}
       />

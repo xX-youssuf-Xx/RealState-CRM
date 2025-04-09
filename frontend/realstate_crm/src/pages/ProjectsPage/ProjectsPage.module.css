@@ -1,599 +1,684 @@
 .projectsPage {
-    padding: 1.5rem;
-    direction: rtl;
-  }
-  
+  padding: 1.5rem;
+  direction: rtl;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  color: #0a2351;
+  font-size: 1.75rem;
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.searchContainer {
+  position: relative;
+  width: 250px;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #0a2351;
+  box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+}
+
+/* View Toggle Styles */
+.viewToggle {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.viewButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.viewButton:hover {
+  background-color: #f5f5f5;
+}
+
+.activeView {
+  background-color: #0a2351;
+  color: white;
+  border-color: #0a2351;
+}
+
+.activeView:hover {
+  background-color: #0d2b63;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #d4af37;
+  color: #0a2351;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:hover {
+  background-color: #f5cc50;
+}
+
+.addButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  color: #666;
+}
+
+.emptyState p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+/* Card View Styles */
+.projectsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* List View Styles */
+.projectsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.projectListItem {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 1rem;
+}
+
+.projectListItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.projectListHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.projectListContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.projectListDetails {
+  display: flex;
+  gap: 2rem;
+}
+
+.projectCard {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.projectCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.projectHeader {
+  background-color: #0a2351;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.projectName {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editButton,
+.deleteButton,
+.imageButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.imageButton {
+  position: relative;
+}
+
+.imageCount {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #d4af37;
+  color: #0a2351;
+  font-size: 0.7rem;
+  font-weight: bold;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.editButton:hover,
+.imageButton:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.deleteButton:hover {
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.projectDetails {
+  padding: 1rem;
+  flex-grow: 1;
+}
+
+.detailItem {
+  margin-bottom: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detailItem:last-child {
+  margin-bottom: 0;
+}
+
+.detailLabel {
+  font-weight: bold;
+  color: #555;
+}
+
+.detailValue {
+  color: #333;
+}
+
+.projectFooter {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.manageButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #0a2351;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  text-decoration: none;
+  text-align: center;
+}
+
+.manageButton:hover {
+  background-color: #0d2b63;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.galleryModal {
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.confirmModal {
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  background-color: #0a2351;
+  color: white;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.form {
+  padding: 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: #0a2351;
+  box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+}
+
+.fileUploadContainer {
+  display: flex;
+  align-items: center;
+}
+
+.fileUploadButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px dashed #ddd;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.fileUploadButton:hover {
+  background-color: #e5e5e5;
+  border-color: #0a2351;
+}
+
+.fileInput {
+  display: none;
+}
+
+.imagesSection {
+  margin-bottom: 1.5rem;
+}
+
+.imagesSection h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #0a2351;
+}
+
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 100px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.imagePreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.removeImageButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(255, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.removeImageButton:hover {
+  background-color: rgba(255, 0, 0, 0.9);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.cancelButton {
+  background-color: #f5f5f5;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancelButton:hover {
+  background-color: #e5e5e5;
+}
+
+.cancelButton:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #d4af37;
+  color: #0a2351;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #f5cc50;
+}
+
+.submitButton:disabled {
+  background-color: #cccccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.deleteConfirmButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.deleteConfirmButton:hover {
+  background-color: #f44336;
+}
+
+.deleteConfirmButton:disabled {
+  background-color: #ffcdd2;
+  color: #b71c1c;
+  cursor: not-allowed;
+}
+
+/* Gallery Modal Styles */
+.galleryContent {
+  padding: 1.5rem;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.galleryImageContainer {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.galleryImageContainer:hover {
+  transform: scale(1.05);
+}
+
+.galleryImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.noImages {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.galleryFooter {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+}
+
+.closeGalleryButton {
+  background-color: #0a2351;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.closeGalleryButton:hover {
+  background-color: #0d2b63;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
   .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
-  
-  .title {
-    color: #0a2351;
-    font-size: 1.75rem;
-    margin: 0;
-  }
-  
+
   .headerActions {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+    width: 100%;
+    flex-direction: column;
   }
-  
+
   .searchContainer {
-    position: relative;
-    width: 250px;
-  }
-  
-  .searchIcon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-  }
-  
-  .searchInput {
     width: 100%;
-    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.9rem;
   }
-  
-  .searchInput:focus {
-    outline: none;
-    border-color: #0a2351;
-    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
-  }
-  
-  .addButton {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background-color: #d4af37;
-    color: #0a2351;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .addButton:hover {
-    background-color: #f5cc50;
-  }
-  
-  .addButton:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
-  
-  .emptyState {
-    text-align: center;
-    padding: 3rem;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    color: #666;
-  }
-  
-  .emptyState p {
-    margin-bottom: 1.5rem;
-    font-size: 1.1rem;
-  }
-  
+
   .projectsGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: 1fr;
   }
-  
-  .projectCard {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
+
+  .projectListDetails {
     flex-direction: column;
-  }
-  
-  .projectCard:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .projectHeader {
-    background-color: #0a2351;
-    color: white;
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .projectName {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  .actions {
-    display: flex;
     gap: 0.5rem;
   }
-  
-  .editButton,
-  .deleteButton,
-  .imageButton {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-    display: flex;
-    align-items: center;
-  }
-  
-  .imageButton {
-    position: relative;
-  }
-  
-  .imageCount {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: #d4af37;
-    color: #0a2351;
-    font-size: 0.7rem;
-    font-weight: bold;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .imageButton:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-  .editButton:hover,
-  .imageButton:hover:not(:disabled) {
-    background-color: rgba(255, 255, 255, 0.2);
-  }
-  
-  .deleteButton:hover {
-    background-color: rgba(255, 0, 0, 0.2);
-  }
-  
-  .projectDetails {
-    padding: 1rem;
-    flex-grow: 1;
-  }
-  
-  .detailItem {
-    margin-bottom: 0.75rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .detailItem:last-child {
-    margin-bottom: 0;
-  }
-  
-  .detailLabel {
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .detailValue {
-    color: #333;
-  }
-  
-  .projectFooter {
-    padding: 1rem;
-    border-top: 1px solid #eee;
-  }
-  
-  .manageButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    background-color: #0a2351;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.75rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 100%;
-    text-decoration: none;
-    text-align: center;
-  }
-  
-  .manageButton:hover {
-    background-color: #0d2b63;
-  }
-  
-  /* Modal Styles */
-  .modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    padding: 1rem;
-  }
-  
-  .modal {
-    background-color: white;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  .galleryModal {
-    background-color: white;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 800px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    display: flex;
+
+  .projectListContent {
     flex-direction: column;
-  }
-  
-  .confirmModal {
-    background-color: white;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 400px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    text-align: center;
-  }
-  
-  .modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-    background-color: #0a2351;
-    color: white;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-  }
-  
-  .modalHeader h2 {
-    margin: 0;
-    font-size: 1.25rem;
-  }
-  
-  .closeButton {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-  }
-  
-  .closeButton:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-  }
-  
-  .form {
-    padding: 1.5rem;
-  }
-  
-  .formGroup {
-    margin-bottom: 1.25rem;
-  }
-  
-  .formGroup label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .formGroup input,
-  .formGroup select,
-  .formGroup textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: inherit;
-  }
-  
-  .formGroup input:focus,
-  .formGroup select:focus,
-  .formGroup textarea:focus {
-    outline: none;
-    border-color: #0a2351;
-    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
-  }
-  
-  .fileUploadContainer {
-    display: flex;
-    align-items: center;
-  }
-  
-  .fileUploadButton {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background-color: #f5f5f5;
-    color: #333;
-    border: 1px dashed #ddd;
-    border-radius: 4px;
-    padding: 0.75rem 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .fileUploadButton:hover {
-    background-color: #e5e5e5;
-    border-color: #0a2351;
-  }
-  
-  .fileInput {
-    display: none;
-  }
-  
-  .imagesSection {
-    margin-bottom: 1.5rem;
-  }
-  
-  .imagesSection h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-    color: #0a2351;
-  }
-  
-  .imageGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    align-items: flex-start;
     gap: 1rem;
   }
-  
-  .imageContainer {
-    position: relative;
-    width: 100%;
-    height: 100px;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  
-  .imagePreview {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .removeImageButton {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: rgba(255, 0, 0, 0.7);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .removeImageButton:hover {
-    background-color: rgba(255, 0, 0, 0.9);
-  }
-  
+
   .formActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1.5rem;
+    flex-direction: column;
   }
-  
-  .cancelButton {
-    background-color: #f5f5f5;
-    color: #333;
-    border: none;
-    border-radius: 4px;
-    padding: 0.75rem 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .cancelButton:hover {
-    background-color: #e5e5e5;
-  }
-  
-  .cancelButton:disabled {
-    background-color: #f5f5f5;
-    color: #999;
-    cursor: not-allowed;
-  }
-  
-  .submitButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    background-color: #d4af37;
-    color: #0a2351;
-    border: none;
-    border-radius: 4px;
-    padding: 0.75rem 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submitButton:hover {
-    background-color: #f5cc50;
-  }
-  
-  .submitButton:disabled {
-    background-color: #cccccc;
-    color: #666;
-    cursor: not-allowed;
-  }
-  
-  .deleteConfirmButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    background-color: #e53935;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.75rem 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .deleteConfirmButton:hover {
-    background-color: #f44336;
-  }
-  
-  .deleteConfirmButton:disabled {
-    background-color: #ffcdd2;
-    color: #b71c1c;
-    cursor: not-allowed;
-  }
-  
-  /* Gallery Modal Styles */
-  .galleryContent {
-    padding: 1.5rem;
-    flex-grow: 1;
-    overflow-y: auto;
-  }
-  
-  .galleryGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-  
-  .galleryImageContainer {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    border-radius: 4px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  
-  .galleryImageContainer:hover {
-    transform: scale(1.05);
-  }
-  
-  .galleryImage {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .noImages {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
-  }
-  
-  .galleryFooter {
-    padding: 1rem;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: center;
-  }
-  
+
+  .cancelButton,
+  .submitButton,
+  .deleteConfirmButton,
   .closeGalleryButton {
-    background-color: #0a2351;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.75rem 2rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    width: 100%;
   }
-  
-  .closeGalleryButton:hover {
-    background-color: #0d2b63;
+
+  .galleryGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
-  
-  /* Responsive styles */
-  @media (max-width: 768px) {
-    .header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-  
-    .headerActions {
-      width: 100%;
-      flex-direction: column;
-    }
-  
-    .searchContainer {
-      width: 100%;
-    }
-  
-    .projectsGrid {
-      grid-template-columns: 1fr;
-    }
-  
-    .formActions {
-      flex-direction: column;
-    }
-  
-    .cancelButton,
-    .submitButton,
-    .deleteConfirmButton,
-    .closeGalleryButton {
-      width: 100%;
-    }
-  
-    .galleryGrid {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
-  
-    .galleryImageContainer {
-      height: 150px;
-    }
+
+  .galleryImageContainer {
+    height: 150px;
   }
-  
+}

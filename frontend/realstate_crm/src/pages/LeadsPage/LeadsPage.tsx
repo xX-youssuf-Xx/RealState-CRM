@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect, useMemo } from "react"
-import { Edit, Trash2, Plus, X, Search, Info, Phone, Filter, UserPlus, ExternalLink } from "lucide-react"
+import { Edit, Trash2, Plus, X, Search, Info, Phone, Filter, UserPlus, ExternalLink, Grid, List } from "lucide-react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useGetAllLeads, type Lead } from "../../hooks/Leads/useGetAllLeads"
@@ -12,6 +12,7 @@ import { useDeleteLead } from "../../hooks/Leads/useDeleteLead"
 import { useGetLeadBySalesId } from "../../hooks/Leads/useGetLeadBySalesId"
 import { useTransferLead } from "../../hooks/Leads/useTransferLead"
 import { useGetAllEmployees, type Employee } from "../../hooks/Employees/useGetAllEmployees"
+import { useGetEmployee } from "../../hooks/Employees/useGetEmployee"
 import { useAuth } from "../../contexts/auth"
 import styles from "./LeadsPage.module.css"
 import Loading from "../../components/Loading/Loading"
@@ -152,6 +153,10 @@ interface FilterOptions {
   isCreatedBySales: boolean | null
 }
 
+interface LeadWithSalesName extends Lead {
+  salesName?: string
+}
+
 const initialFormData: LeadFormData = {
   name: "",
   number: "",
@@ -174,7 +179,7 @@ const initialFilterOptions: FilterOptions = {
 }
 
 const LeadsPage: React.FC = () => {
-  const [leads, setLeads] = useState<Lead[]>([])
+  const [leads, setLeads] = useState<LeadWithSalesName[]>([])
   const [employees, setEmployees] = useState<Employee[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -182,16 +187,19 @@ const LeadsPage: React.FC = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(null)
+  const [selectedLead, setSelectedLead] = useState<LeadWithSalesName | null>(null)
   const [formData, setFormData] = useState<LeadFormData>(initialFormData)
   const [filterOptions, setFilterOptions] = useState<FilterOptions>(initialFilterOptions)
   const [transferSalesId, setTransferSalesId] = useState<number | null>(null)
   const [isFiltered, setIsFiltered] = useState(false)
+  const [viewMode, setViewMode] = useState<"cards" | "list">("cards")
+  const [employeeMap, setEmployeeMap] = useState<Record<string, string>>({})
 
   const { employee } = useAuth()
   const { execute: fetchLeads, isLoading: isLoadingLeads } = useGetAllLeads()
   const { execute: fetchLeadsBySalesId, isLoading: isLoadingLeadsBySalesId } = useGetLeadBySalesId()
   const { execute: fetchEmployees, isLoading: isLoadingEmployees } = useGetAllEmployees()
+  const { execute: fetchEmployee } = useGetEmployee()
   const { execute: createLead, isLoading: isCreating } = useCreateLead()
   const { execute: updateLead, isLoading: isUpdating } = useUpdateLead()
   const { execute: deleteLead, isLoading: isDeleting } = useDeleteLead()
@@ -199,11 +207,17 @@ const LeadsPage: React.FC = () => {
 
   // Fetch leads and employees on component mount
   useEffect(() => {
-    loadLeads()
     loadEmployees()
-  }, [])
 
-  // Also update the loadLeads function to ensure consistent data formatting
+    // Load leads based on user role
+    if (employee?.role === "ADMIN") {
+      loadLeads()
+    } else if (employee?.role === "SALES" && employee?.id) {
+      loadLeadsBySalesId(Number.parseInt(employee.id))
+    }
+  }, [employee])
+
+  // Load all leads (for admin)
   const loadLeads = async () => {
     try {
       const data = await fetchLeads()
@@ -217,7 +231,9 @@ const LeadsPage: React.FC = () => {
         is_created_by_sales: Boolean(lead.is_created_by_sales),
       }))
 
-      setLeads(formattedData)
+      // Add sales names to leads
+      const leadsWithSalesNames = await addSalesNamesToLeads(formattedData)
+      setLeads(leadsWithSalesNames)
     } catch (error: any) {
       toast.error(error.message || "حدث خطأ أثناء تحميل بيانات العملاء")
     }
@@ -227,16 +243,65 @@ const LeadsPage: React.FC = () => {
     try {
       const data = await fetchEmployees()
       setEmployees(data)
+
+      // Create a map of employee IDs to names for quick lookup
+      const empMap: Record<string, string> = {}
+      data.forEach((emp) => {
+        empMap[emp.id.toString()] = emp.name
+      })
+      setEmployeeMap(empMap)
     } catch (error: any) {
       toast.error(error.message || "حدث خطأ أثناء تحميل بيانات الموظفين")
     }
   }
 
-  // Update the loadLeadsBySalesId function to properly handle the response data
+  // Add sales names to leads
+  const addSalesNamesToLeads = async (leadsData: Lead[]): Promise<LeadWithSalesName[]> => {
+    // First try to use the employee map for quick lookup
+    const leadsWithNames = leadsData.map((lead) => {
+      if (lead.sales_id && employeeMap[lead.sales_id.toString()]) {
+        return {
+          ...lead,
+          salesName: employeeMap[lead.sales_id.toString()],
+        }
+      }
+      return lead as LeadWithSalesName
+    })
+
+    // For any leads without a sales name, fetch the employee data
+    const leadsWithMissingSalesNames = leadsWithNames.filter((lead) => lead.sales_id && !lead.salesName)
+
+    if (leadsWithMissingSalesNames.length > 0) {
+      // Create a new map to store newly fetched employee names
+      const newEmployeeMap = { ...employeeMap }
+
+      // Fetch missing employee data
+      await Promise.all(
+        leadsWithMissingSalesNames.map(async (lead) => {
+          if (lead.sales_id) {
+            try {
+              const salesData = await fetchEmployee(Number(lead.sales_id))
+              lead.salesName = salesData.name
+              newEmployeeMap[lead.sales_id.toString()] = salesData.name
+            } catch (error) {
+              console.error(`Error fetching employee ${lead.sales_id}:`, error)
+              lead.salesName = `مندوب ${lead.sales_id}`
+            }
+          }
+        }),
+      )
+
+      // Update the employee map with newly fetched data
+      setEmployeeMap(newEmployeeMap)
+    }
+
+    return leadsWithNames
+  }
+
+  // Load leads by sales ID (for salespeople)
   const loadLeadsBySalesId = async (salesId: number) => {
     try {
       const data = await fetchLeadsBySalesId(salesId)
-      console.log("Leads by Sales ID Response:", data)
 
       // Ensure data is properly formatted with correct types
       const formattedData = data.map((lead) => ({
@@ -247,7 +312,9 @@ const LeadsPage: React.FC = () => {
         is_created_by_sales: Boolean(lead.is_created_by_sales),
       }))
 
-      setLeads(formattedData)
+      // Add sales names to leads
+      const leadsWithSalesNames = await addSalesNamesToLeads(formattedData)
+      setLeads(leadsWithSalesNames)
       setIsFiltered(true)
       toast.info(`تم العثور على ${data.length} عميل`)
     } catch (error: any) {
@@ -355,7 +422,7 @@ const LeadsPage: React.FC = () => {
     setIsModalOpen(true)
   }
 
-  const openEditModal = (lead: Lead) => {
+  const openEditModal = (lead: LeadWithSalesName) => {
     setSelectedLead(lead)
     setFormData({
       id: lead.id.toString(),
@@ -372,12 +439,12 @@ const LeadsPage: React.FC = () => {
     setIsModalOpen(true)
   }
 
-  const openInfoModal = (lead: Lead) => {
+  const openInfoModal = (lead: LeadWithSalesName) => {
     setSelectedLead(lead)
     setIsInfoModalOpen(true)
   }
 
-  const openDeleteModal = (lead: Lead) => {
+  const openDeleteModal = (lead: LeadWithSalesName) => {
     setSelectedLead(lead)
     setIsDeleteModalOpen(true)
   }
@@ -386,7 +453,7 @@ const LeadsPage: React.FC = () => {
     setIsFilterModalOpen(true)
   }
 
-  const openTransferModal = (lead: Lead) => {
+  const openTransferModal = (lead: LeadWithSalesName) => {
     setSelectedLead(lead)
     setTransferSalesId(null)
     setIsTransferModalOpen(true)
@@ -403,7 +470,13 @@ const LeadsPage: React.FC = () => {
   const resetFilters = () => {
     setFilterOptions(initialFilterOptions)
     setIsFiltered(false)
-    loadLeads()
+
+    // Reload leads based on user role
+    if (employee?.role === "ADMIN") {
+      loadLeads()
+    } else if (employee?.role === "SALES" && employee?.id) {
+      loadLeadsBySalesId(Number.parseInt(employee.id))
+    }
   }
 
   const applyFilters = () => {
@@ -465,10 +538,12 @@ const LeadsPage: React.FC = () => {
       }
 
       closeModal()
-      if (isFiltered && filterOptions.salesId) {
-        loadLeadsBySalesId(filterOptions.salesId)
-      } else {
+
+      // Reload leads based on user role
+      if (employee?.role === "ADMIN") {
         loadLeads()
+      } else if (employee?.role === "SALES" && employee?.id) {
+        loadLeadsBySalesId(Number.parseInt(employee.id))
       }
     } catch (error: any) {
       toast.error(error.message || "حدث خطأ أثناء حفظ بيانات العميل")
@@ -482,10 +557,12 @@ const LeadsPage: React.FC = () => {
       await deleteLead(Number(selectedLead.id))
       toast.success("تم حذف العميل بنجاح")
       closeModal()
-      if (isFiltered && filterOptions.salesId) {
-        loadLeadsBySalesId(filterOptions.salesId)
-      } else {
+
+      // Reload leads based on user role
+      if (employee?.role === "ADMIN") {
         loadLeads()
+      } else if (employee?.role === "SALES" && employee?.id) {
+        loadLeadsBySalesId(Number.parseInt(employee.id))
       }
     } catch (error: any) {
       toast.error(error.message || "حدث خطأ أثناء حذف العميل")
@@ -499,10 +576,12 @@ const LeadsPage: React.FC = () => {
       await transferLead(Number(selectedLead.id), transferSalesId)
       toast.success("تم نقل العميل بنجاح")
       closeModal()
-      if (isFiltered && filterOptions.salesId) {
-        loadLeadsBySalesId(filterOptions.salesId)
-      } else {
+
+      // Reload leads based on user role
+      if (employee?.role === "ADMIN") {
         loadLeads()
+      } else if (employee?.role === "SALES" && employee?.id) {
+        loadLeadsBySalesId(Number.parseInt(employee.id))
       }
     } catch (error: any) {
       toast.error(error.message || "حدث خطأ أثناء نقل العميل")
@@ -510,10 +589,19 @@ const LeadsPage: React.FC = () => {
   }
 
   // Get sales person name by ID
-  const getSalesPersonName = (salesId: number | null) => {
-    if (!salesId) return "غير معين"
-    const salesPerson = employees.find((emp) => emp.id === salesId)
-    return salesPerson ? salesPerson.name : "غير معروف"
+  const getSalesPersonName = (lead: LeadWithSalesName) => {
+    if (!lead.sales_id) return "غير معين"
+
+    // If the lead already has a salesName property, use it
+    if (lead.salesName) return lead.salesName
+
+    // Otherwise, try to get it from the employee map
+    if (employeeMap[lead.sales_id.toString()]) {
+      return employeeMap[lead.sales_id.toString()]
+    }
+
+    // If all else fails, return a generic name
+    return `مندوب ${lead.sales_id}`
   }
 
   // Get CSS class based on lead state
@@ -535,6 +623,25 @@ const LeadsPage: React.FC = () => {
     return styles.leadCard
   }
 
+  // Get CSS class for list item based on lead state
+  const getLeadListItemClass = (state: string) => {
+    const upperState = state.toUpperCase()
+    if (upperState === "NEW") {
+      return `${styles.leadListItem} ${styles.newLead}`
+    } else if (upperState === "CONTACTED" || upperState === "FOLLOW_UP") {
+      return `${styles.leadListItem} ${styles.contactedLead}`
+    } else if (upperState === "INTERESTED" || upperState === "VISITING" || upperState === "MEETING") {
+      return `${styles.leadListItem} ${styles.interestedLead}`
+    } else if (upperState === "NEGOTIATING" || upperState === "QUALIFIED") {
+      return `${styles.leadListItem} ${styles.qualifiedLead}`
+    } else if (upperState === "CLOSED_WON") {
+      return `${styles.leadListItem} ${styles.wonLead}`
+    } else if (upperState === "CLOSED_LOST") {
+      return `${styles.leadListItem} ${styles.lostLead}`
+    }
+    return styles.leadListItem
+  }
+
   return (
     <div className={styles.leadsPage}>
       <div className={styles.header}>
@@ -550,6 +657,22 @@ const LeadsPage: React.FC = () => {
               className={styles.searchInput}
             />
           </div>
+          <div className={styles.viewToggle}>
+            <button
+              className={`${styles.viewButton} ${viewMode === "cards" ? styles.activeView : ""}`}
+              onClick={() => setViewMode("cards")}
+              aria-label="عرض البطاقات"
+            >
+              <Grid size={18} />
+            </button>
+            <button
+              className={`${styles.viewButton} ${viewMode === "list" ? styles.activeView : ""}`}
+              onClick={() => setViewMode("list")}
+              aria-label="عرض القائمة"
+            >
+              <List size={18} />
+            </button>
+          </div>
           <button className={styles.filterButton} onClick={openFilterModal}>
             <Filter size={18} />
             <span>تصفية</span>
@@ -562,7 +685,7 @@ const LeadsPage: React.FC = () => {
         </div>
       </div>
 
-      {isLoadingLeads || isLoadingEmployees  || isLoadingLeadsBySalesId? (
+      {isLoadingLeads || isLoadingEmployees || isLoadingLeadsBySalesId ? (
         <Loading isVisible={true} />
       ) : filteredAndSortedLeads.length === 0 ? (
         <div className={styles.emptyState}>
@@ -595,59 +718,157 @@ const LeadsPage: React.FC = () => {
               </button>
             </div>
           )}
-          <div className={styles.leadsGrid}>
-            {filteredAndSortedLeads.map((lead) => (
-              <div key={lead.id} className={getLeadCardClass(lead.state)}>
-                <div className={`${styles.leadHeader} ${styles[lead.state.toLowerCase() + "Header"]}`}>
-                  <h3 className={styles.leadName}>{lead.name}</h3>
-                  <div className={styles.actions}>
-                    <button className={styles.infoButton} onClick={() => openInfoModal(lead)} aria-label="معلومات">
-                      <Info size={18} />
-                    </button>
-                    <button className={styles.editButton} onClick={() => openEditModal(lead)} aria-label="تعديل">
-                      <Edit size={18} />
-                    </button>
-                    <button className={styles.deleteButton} onClick={() => openDeleteModal(lead)} aria-label="حذف">
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </div>
 
-                <div className={styles.leadDetails}>
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>رقم الهاتف:</span>
-                    <div className={styles.phoneActions}>
-                      <span className={styles.detailValue}>{lead.number}</span>
-                      <div className={styles.phoneButtons}>
-                        <a href={`tel:${lead.number}`} className={styles.callButton} aria-label="اتصال">
-                          <Phone size={16} />
-                        </a>
-                        <a
-                          href={`https://wa.me/${lead.number.replace(/\+/g, "").replace(/\s/g, "")}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={styles.whatsappButton}
-                          aria-label="واتساب"
-                        >
-                          <ExternalLink size={16} />
-                        </a>
+          {viewMode === "cards" ? (
+            <div className={styles.leadsGrid}>
+              {filteredAndSortedLeads.map((lead) => (
+                <div key={lead.id} className={getLeadCardClass(lead.state)}>
+                  <div className={`${styles.leadHeader} ${styles[lead.state.toLowerCase() + "Header"]}`}>
+                    <h3 className={styles.leadName}>{lead.name}</h3>
+                    <div className={styles.actions}>
+                      <button className={styles.infoButton} onClick={() => openInfoModal(lead)} aria-label="معلومات">
+                        <Info size={18} />
+                      </button>
+                    {employee?.role == 'ADMIN' && (<>
+                      <button className={styles.editButton} onClick={() => openEditModal(lead)} aria-label="تعديل">
+                        <Edit size={18} />
+                      </button>
+                      <button className={styles.deleteButton} onClick={() => openDeleteModal(lead)} aria-label="حذف">
+                        <Trash2 size={18} />
+                      </button>
+                    </>)}
+
+                    </div>
+                  </div>
+
+                  <div className={styles.leadDetails}>
+                    <div className={styles.detailItem}>
+                      <span className={styles.detailLabel}>رقم الهاتف:</span>
+                      <div className={styles.phoneActions}>
+                        <span className={styles.detailValue}>{lead.number}</span>
+                        <div className={styles.phoneButtons}>
+                          <a href={`tel:${lead.number}`} className={styles.callButton} aria-label="اتصال">
+                            <Phone size={16} />
+                          </a>
+                          <a
+                            href={`https://wa.me/${lead.number.replace(/\+/g, "").replace(/\s/g, "")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.whatsappButton}
+                            aria-label="واتساب"
+                          >
+                            <ExternalLink size={16} />
+                          </a>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className={styles.actionButtons}>
-                    <div className={styles.transferButton} onClick={() => openTransferModal(lead)}>
-                      <UserPlus size={16} />
-                      <span>تحويل</span>
+                    {employee?.role == 'ADMIN' && (<>
+
+                    {lead.sales_id && (
+                      <div className={styles.detailItem}>
+                        <span className={styles.detailLabel}>المندوب:</span>
+                        <span className={styles.detailValue}>{getSalesPersonName(lead)}</span>
+                      </div>
+                    )}
+                    </>)}
+
+                    <div className={styles.actionButtons}>
+                    {employee?.role == 'ADMIN' && (<>
+                
+                      <div className={styles.transferButton} onClick={() => openTransferModal(lead)}>
+                        <UserPlus size={16} />
+                        <span>تحويل</span>
+                      </div>
+                    </>)}
+
+                      <a href={`/leads/${lead.id}`} className={styles.detailsButton}>
+                        <Info size={16} />
+                        <span>بيانات مفصلة</span>
+                      </a>
                     </div>
-                    <a href={`/leads/${lead.id}`} className={styles.detailsButton}>
-                      <Info size={16} />
-                      <span>بيانات مفصلة</span>
-                    </a>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.leadsList}>
+              {filteredAndSortedLeads.map((lead) => (
+                <div key={lead.id} className={getLeadListItemClass(lead.state)}>
+                  <div className={styles.leadListHeader}>
+                    <h3 className={styles.leadName}>{lead.name}</h3>
+                    <div className={styles.actions}>
+
+                      <button className={styles.infoButton} onClick={() => openInfoModal(lead)} aria-label="معلومات">
+                        <Info size={18} />
+                      </button>
+                    {employee?.role == 'ADMIN' && (<>
+                      <button className={styles.editButton} onClick={() => openEditModal(lead)} aria-label="تعديل">
+                        <Edit size={18} />
+                      </button>
+                      <button className={styles.deleteButton} onClick={() => openDeleteModal(lead)} aria-label="حذف">
+                        <Trash2 size={18} />
+                      </button>
+                    </>)}
+                    </div>
+                  </div>
+
+                  <div className={styles.leadListContent}>
+                    <div className={styles.leadListDetails}>
+                      <div className={styles.detailItem}>
+                        <span className={styles.detailLabel}>رقم الهاتف:</span>
+                        <div className={styles.phoneActions}>
+                          <span className={styles.detailValue}>{lead.number}</span>
+                          <div className={styles.phoneButtons}>
+                            <a href={`tel:${lead.number}`} className={styles.callButton} aria-label="اتصال">
+                              <Phone size={16} />
+                            </a>
+                            <a
+                              href={`https://wa.me/${lead.number.replace(/\+/g, "").replace(/\s/g, "")}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={styles.whatsappButton}
+                              aria-label="واتساب"
+                            >
+                              <ExternalLink size={16} />
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                      <div className={styles.detailItem}>
+                        <span className={styles.detailLabel}>الحالة:</span>
+                        <span className={`${styles.detailValue} ${styles[lead.state.toLowerCase() + "State"]}`}>
+                          {stateTranslations[lead.state] || lead.state}
+                        </span>
+                      </div>
+                    {employee?.role == 'ADMIN' && (<>
+                      {lead.sales_id && (
+                        <div className={styles.detailItem}>
+                          <span className={styles.detailLabel}>المندوب:</span>
+                          <span className={styles.detailValue}>{getSalesPersonName(lead)}</span>
+                        </div>
+                      )}
+                    </>)}
+
+                    </div>
+                    <div className={styles.leadListActions}>
+                    {employee?.role == 'ADMIN' && (<>
+                    
+                      <div className={styles.transferButton} onClick={() => openTransferModal(lead)}>
+                        <UserPlus size={16} />
+                        <span>تحويل</span>
+                      </div>
+                    </>)}
+
+                      <a href={`/leads/${lead.id}`} className={styles.detailsButton}>
+                        <Info size={16} />
+                        <span>بيانات مفصلة</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </>
       )}
 
@@ -871,7 +1092,7 @@ const LeadsPage: React.FC = () => {
                 <h3 className={styles.sectionTitle}>معلومات إضافية</h3>
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>مسؤول المبيعات:</span>
-                  <span className={styles.infoValue}>{getSalesPersonName(selectedLead.sales_id)}</span>
+                  <span className={styles.infoValue}>{getSalesPersonName(selectedLead)}</span>
                 </div>
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>تم إنشاؤه بواسطة:</span>
@@ -901,6 +1122,7 @@ const LeadsPage: React.FC = () => {
               <button className={styles.closeInfoButton} onClick={closeModal}>
                 إغلاق
               </button>
+              {employee?.role == 'ADMIN' && (<>
               <button
                 className={styles.editInfoButton}
                 onClick={() => {
@@ -910,6 +1132,7 @@ const LeadsPage: React.FC = () => {
               >
                 تعديل
               </button>
+              </>)}
             </div>
           </div>
         </div>

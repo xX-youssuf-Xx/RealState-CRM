@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect, useMemo } from "react"
-import { Edit, Trash2, Plus, X, Search, ImageIcon, Building, Upload } from "lucide-react"
+import { Edit, Trash2, Plus, X, Search, ImageIcon, Building, Upload, Grid, List } from "lucide-react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useGetAllProjects } from "../../hooks/Projects/useGetAllProjects"
@@ -35,6 +35,7 @@ const ProjectsPage: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isImageGalleryOpen, setIsImageGalleryOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [viewMode, setViewMode] = useState<"cards" | "list">("cards")
 
   // Form state for create/edit
   const [name, setName] = useState("")
@@ -266,6 +267,22 @@ const ProjectsPage: React.FC = () => {
               className={styles.searchInput}
             />
           </div>
+          <div className={styles.viewToggle}>
+            <button
+              className={`${styles.viewButton} ${viewMode === "cards" ? styles.activeView : ""}`}
+              onClick={() => setViewMode("cards")}
+              aria-label="عرض البطاقات"
+            >
+              <Grid size={18} />
+            </button>
+            <button
+              className={`${styles.viewButton} ${viewMode === "list" ? styles.activeView : ""}`}
+              onClick={() => setViewMode("list")}
+              aria-label="عرض القائمة"
+            >
+              <List size={18} />
+            </button>
+          </div>
           <button className={styles.addButton} onClick={openCreateModal} disabled={isLoadingProjects}>
             <Plus size={18} />
             <span>إضافة مشروع</span>
@@ -289,7 +306,7 @@ const ProjectsPage: React.FC = () => {
             </>
           )}
         </div>
-      ) : (
+      ) : viewMode === "cards" ? (
         <div className={styles.projectsGrid}>
           {filteredAndSortedProjects.map((project) => (
             <div key={project.id} className={styles.projectCard}>
@@ -342,6 +359,60 @@ const ProjectsPage: React.FC = () => {
                   <Building size={16} />
                   <span>إدارة المشروع</span>
                 </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.projectsList}>
+          {filteredAndSortedProjects.map((project) => (
+            <div key={project.id} className={styles.projectListItem}>
+              <div className={styles.projectListHeader}>
+                <h3 className={styles.projectName}>{project.name}</h3>
+                <div className={styles.actions}>
+                  <button
+                    className={styles.imageButton}
+                    onClick={() => openImageGallery(project)}
+                    aria-label="عرض الصور"
+                    disabled={getImageCount(project.pics) === 0}
+                  >
+                    <ImageIcon size={18} />
+                    <span className={styles.imageCount}>{getImageCount(project.pics)}</span>
+                  </button>
+                  <button className={styles.editButton} onClick={() => openEditModal(project)} aria-label="تعديل">
+                    <Edit size={18} />
+                  </button>
+                  <button className={styles.deleteButton} onClick={() => openDeleteModal(project)} aria-label="حذف">
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+              </div>
+
+              <div className={styles.projectListContent}>
+                <div className={styles.projectListDetails}>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>الموقع:</span>
+                    <span className={styles.detailValue}>{project.location}</span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>النوع:</span>
+                    <span className={styles.detailValue}>{projectTypeTranslations[project.type] || project.type}</span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>عدد الوحدات:</span>
+                    <span className={styles.detailValue}>{project.number_of_units}</span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>الوحدات المباعة:</span>
+                    <span className={styles.detailValue}>{project.number_of_sold_items}</span>
+                  </div>
+                </div>
+                <div>
+                  <a href={`/projects/${project.id}?name=${project.name}`} className={styles.manageButton}>
+                    <Building size={16} />
+                    <span>إدارة المشروع</span>
+                  </a>
+                </div>
               </div>
             </div>
           ))}

@@ -1,0 +1,1 @@
+import{c as d,r as i}from"./index-BAQHcCZP.js";const p=()=>{const{isLoading:r,error:s,data:c,setError:t,_execute:a}=d(),o=i.useCallback(async(n,u={})=>{try{return await a(`leads/${n}`,"GET",null,u)}catch(e){throw t(e),e}},[a,t]);return{isLoading:r,error:s,data:c,execute:o,setError:t}};export{p as u};

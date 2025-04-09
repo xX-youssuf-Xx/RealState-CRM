@@ -1,0 +1,612 @@
+/* Dashboard Container */
+.dashboardContainer {
+  padding: 1.5rem;
+  background-color: #f4f7fc;
+  min-height: 100vh;
+  direction: rtl;
+}
+
+/* Page Title */
+.pageTitle {
+  color: #0a2351;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+/* Section Headers */
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  margin-top: 2rem;
+}
+
+.sectionTitle {
+  color: #0a2351;
+  font-size: 1.25rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sectionIcon {
+  color: #d4af37;
+}
+
+.sectionActions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Search Container */
+.searchContainer {
+  position: relative;
+  width: 250px;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #0a2351;
+  box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+}
+
+/* View Toggle */
+.viewToggle {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.viewButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.viewButton:hover {
+  background-color: #f5f5f5;
+}
+
+.activeView {
+  background-color: #0a2351;
+  color: white;
+  border-color: #0a2351;
+}
+
+.activeView:hover {
+  background-color: #0d2b63;
+}
+
+/* Stats Cards */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cardHeader {
+  background-color: #0a2351;
+  color: white;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.cardBody {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Salesmen Grid */
+.salesmenGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.salesmanCard {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-right: 4px solid #d4af37;
+}
+
+.salesmanCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.salesmanHeader {
+  padding: 0.75rem 1rem;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #eee;
+}
+
+.salesmanName {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #0a2351;
+}
+
+.salesmanStats {
+  padding: 1rem;
+}
+
+.salesmanStat {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.salesmanStat:last-child {
+  margin-bottom: 0;
+}
+
+.salesmanStatLabel {
+  font-weight: 500;
+  color: #555;
+}
+
+.salesmanStatValue {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Tasks Grid */
+.tasksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.taskCard {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-right: 4px solid #2e7d32;
+  cursor: pointer;
+}
+
+.taskCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #0a2351;
+  border-bottom: 1px solid #eee;
+}
+
+.taskTime {
+  font-size: 0.9rem;
+  color: white;
+  font-weight: bold;
+}
+
+.infoButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.infoButton:hover {
+  color: #0a2351;
+  background-color: rgba(10, 35, 81, 0.1);
+}
+
+.taskContent {
+  padding: 1rem;
+}
+
+.taskName {
+  font-size: 1.1rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: #333;
+}
+
+.taskDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Tasks List */
+.tasksList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.taskListItem {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-right: 4px solid #2e7d32;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.taskListItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.taskListHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.taskListContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.taskListDetails {
+  display: flex;
+  gap: 2rem;
+}
+
+/* Detail Items */
+.detailItem {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.detailLabel {
+  font-weight: 500;
+  margin-left: 0.5rem;
+  color: #666;
+}
+
+.detailValue {
+  color: #333;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #0a2351;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  text-decoration: underline;
+}
+
+.linkButton:hover {
+  color: #d4af37;
+}
+
+.linkIcon {
+  margin-right: 0.25rem;
+}
+
+.actionButton {
+  background-color: #0a2351;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.actionButton:hover {
+  background-color: #0d2b63;
+}
+
+/* Chart Container */
+.chartContainer {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.pieChartWrapper {
+  height: 300px;
+  position: relative;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.emptyState p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  background-color: #0a2351;
+  color: white;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.modalContent {
+  padding: 1.5rem;
+}
+
+.modalSection {
+  margin-bottom: 1.5rem;
+}
+
+.modalSection h3 {
+  color: #0a2351;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #d4af37;
+  padding-bottom: 0.5rem;
+}
+
+.modalItem {
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.modalLabel {
+  font-weight: bold;
+  color: #555;
+  width: 35%;
+}
+
+.modalValue {
+  color: #333;
+  width: 65%;
+}
+
+.notesBox {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 1rem;
+  white-space: pre-line;
+}
+
+.modalFooter {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.closeModalButton {
+  background-color: #f5f5f5;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.closeModalButton:hover {
+  background-color: #e5e5e5;
+}
+
+.viewButton {
+  background-color: #0a2351;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.viewButton:hover {
+  background-color: #0d2b63;
+}
+
+/* Error Message */
+.error {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .sectionActions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .searchContainer {
+    width: 100%;
+  }
+
+  .cardsGrid,
+  .salesmenGrid,
+  .tasksGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .taskListDetails {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .taskListContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .actionButton {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .modalFooter {
+    flex-direction: column;
+  }
+
+  .closeModalButton,
+  .viewButton {
+    width: 100%;
+  }
+}

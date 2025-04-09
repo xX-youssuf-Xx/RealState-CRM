@@ -49,6 +49,41 @@
   box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
 }
 
+/* View Toggle Styles */
+.viewToggle {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.viewButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.viewButton:hover {
+  background-color: #f5f5f5;
+}
+
+.activeView {
+  background-color: #0a2351;
+  color: white;
+  border-color: #0a2351;
+}
+
+.activeView:hover {
+  background-color: #0d2b63;
+}
+
 .addButton {
   display: flex;
   align-items: center;
@@ -85,10 +120,50 @@
   font-size: 1.1rem;
 }
 
+/* Card View Styles */
 .employeesGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
+}
+
+/* List View Styles */
+.employeesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.employeeListItem {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 1rem;
+}
+
+.employeeListItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.employeeListHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.employeeListContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.employeeListDetails {
+  display: flex;
+  gap: 2rem;
 }
 
 /* Base employee card styles */
@@ -125,6 +200,30 @@
 }
 
 .deletedEmployee:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Role-specific list item styles */
+.adminListItem {
+  border-right: 4px solid #d4af37;
+}
+
+.managerListItem {
+  border-right: 4px solid #2e7d32;
+}
+
+.salesListItem {
+  border-right: 4px solid #0a2351;
+}
+
+.deletedListItem {
+  border: 2px dashed #e53935;
+  background-color: #f5f5f5;
+  opacity: 0.7;
+}
+
+.deletedListItem:hover {
   transform: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -513,6 +612,17 @@
 
   .employeesGrid {
     grid-template-columns: 1fr;
+  }
+
+  .employeeListDetails {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .employeeListContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
 
   .formActions {

@@ -51,7 +51,8 @@ export const useApiFetch = <T>() => {
           fetchOptions.headers = headers;
         }
 
-        const response = await fetch(`${"http://localhost:3001/api"}/${url}`, fetchOptions);
+        // const response = await fetch(`${"http://localhost:3001/api"}/${url}`, fetchOptions);
+        const response = await fetch(`${"https://amaar.egypt-tech.com/api"}/${url}`, fetchOptions);
 
         if (!response.ok) {
           const errorData = await response.json();

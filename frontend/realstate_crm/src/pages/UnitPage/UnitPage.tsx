@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useEffect, useMemo } from "react"
 import { useParams, useLocation } from "react-router-dom"
-import { Edit, Trash2, Plus, X, Search, Filter, Info } from "lucide-react"
+import { Edit, Trash2, Plus, X, Search, Filter, Info, Grid, List } from "lucide-react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useGetUnitByProjectId } from "../../hooks/Units/useGetUnitByProjectId"
@@ -52,7 +52,7 @@ const initialFilterOptions: FilterOptions = {
 }
 
 const ProjectUnitsPage: React.FC = () => {
-  const { projectId: projectId } = useParams<{ projectId: string }>()
+  const { projectId } = useParams<{ projectId: string }>()
   const query = useQuery()
   const projectName = query.get("name") || "المشروع"
 
@@ -65,6 +65,7 @@ const ProjectUnitsPage: React.FC = () => {
   const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null)
   const [filterOptions, setFilterOptions] = useState<FilterOptions>(initialFilterOptions)
   const [isFiltered, setIsFiltered] = useState(false)
+  const [viewMode, setViewMode] = useState<"cards" | "list">("cards")
 
   // Form state
   const [formData, setFormData] = useState({
@@ -220,8 +221,6 @@ const ProjectUnitsPage: React.FC = () => {
     e.preventDefault()
 
     if (!projectId || !formData.name || formData.area === "" || formData.price === "") {
-      console.log(projectId)
-
       toast.error("يرجى ملء جميع الحقول المطلوبة")
       return
     }
@@ -274,7 +273,7 @@ const ProjectUnitsPage: React.FC = () => {
     }
   }
 
-  // Get CSS class based on unit status
+  // Get CSS class based on unit status for card view
   const getUnitCardClass = (status: UnitStatus | null) => {
     if (status === "AVAILABLE") {
       return `${styles.unitCard} ${styles.availableUnit}`
@@ -284,6 +283,18 @@ const ProjectUnitsPage: React.FC = () => {
       return `${styles.unitCard} ${styles.soldUnit}`
     }
     return styles.unitCard
+  }
+
+  // Get CSS class based on unit status for list view
+  const getUnitListItemClass = (status: UnitStatus | null) => {
+    if (status === "AVAILABLE") {
+      return `${styles.unitListItem} ${styles.availableListItem}`
+    } else if (status === "RESERVED") {
+      return `${styles.unitListItem} ${styles.reservedListItem}`
+    } else if (status === "SOLD") {
+      return `${styles.unitListItem} ${styles.soldListItem}`
+    }
+    return styles.unitListItem
   }
 
   return (
@@ -303,6 +314,22 @@ const ProjectUnitsPage: React.FC = () => {
               onChange={handleSearchChange}
               className={styles.searchInput}
             />
+          </div>
+          <div className={styles.viewToggle}>
+            <button
+              className={`${styles.viewButton} ${viewMode === "cards" ? styles.activeView : ""}`}
+              onClick={() => setViewMode("cards")}
+              aria-label="عرض البطاقات"
+            >
+              <Grid size={18} />
+            </button>
+            <button
+              className={`${styles.viewButton} ${viewMode === "list" ? styles.activeView : ""}`}
+              onClick={() => setViewMode("list")}
+              aria-label="عرض القائمة"
+            >
+              <List size={18} />
+            </button>
           </div>
           <button className={styles.filterButton} onClick={openFilterModal}>
             <Filter size={18} />
@@ -349,53 +376,97 @@ const ProjectUnitsPage: React.FC = () => {
               </button>
             </div>
           )}
-          <div className={styles.unitsGrid}>
-            {filteredAndSortedUnits.map((unit) => (
-              <div key={unit.id} className={getUnitCardClass(unit.status)}>
-                <div
-                  className={`${styles.unitHeader} ${unit.status ? styles[unit.status.toLowerCase() + "Header"] : ""}`}
-                >
-                  <h3 className={styles.unitName}>{unit.name}</h3>
-                  <div className={styles.actions}>
-                    <button className={styles.infoButton} onClick={() => openInfoModal(unit)} aria-label="معلومات">
-                      <Info size={18} />
-                    </button>
-                    <button className={styles.editButton} onClick={() => openEditModal(unit)} aria-label="تعديل">
-                      <Edit size={18} />
-                    </button>
-                    <button className={styles.deleteButton} onClick={() => openDeleteModal(unit)} aria-label="حذف">
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </div>
-
-                <div className={styles.unitDetails}>
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>المساحة:</span>
-                    <span className={styles.detailValue}>{formatArea(unit.area)}</span>
-                  </div>
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>السعر:</span>
-                    <span className={styles.detailValue}>{formatCurrency(unit.price)}</span>
-                  </div>
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>الحالة:</span>
-                    <span
-                      className={`${styles.detailValue} ${unit.status ? styles[unit.status.toLowerCase() + "Status"] : ""}`}
-                    >
-                      {unit.status ? unitStatusTranslations[unit.status] : "غير محدد"}
-                    </span>
-                  </div>
-                  {unit.status === "SOLD" && unit.sold_date && (
-                    <div className={styles.detailItem}>
-                      <span className={styles.detailLabel}>تاريخ البيع:</span>
-                      <span className={styles.detailValue}>{formatDate(unit.sold_date)}</span>
+          {viewMode === "cards" ? (
+            <div className={styles.unitsGrid}>
+              {filteredAndSortedUnits.map((unit) => (
+                <div key={unit.id} className={getUnitCardClass(unit.status)}>
+                  <div
+                    className={`${styles.unitHeader} ${unit.status ? styles[unit.status.toLowerCase() + "Header"] : ""}`}
+                  >
+                    <h3 className={styles.unitName}>{unit.name}</h3>
+                    <div className={styles.actions}>
+                      <button className={styles.infoButton} onClick={() => openInfoModal(unit)} aria-label="معلومات">
+                        <Info size={18} />
+                      </button>
+                      <button className={styles.editButton} onClick={() => openEditModal(unit)} aria-label="تعديل">
+                        <Edit size={18} />
+                      </button>
+                      <button className={styles.deleteButton} onClick={() => openDeleteModal(unit)} aria-label="حذف">
+                        <Trash2 size={18} />
+                      </button>
                     </div>
-                  )}
+                  </div>
+
+                  <div className={styles.unitDetails}>
+                    <div className={styles.detailItem}>
+                      <span className={styles.detailLabel}>المساحة:</span>
+                      <span className={styles.detailValue}>{formatArea(unit.area)}</span>
+                    </div>
+                    <div className={styles.detailItem}>
+                      <span className={styles.detailLabel}>السعر:</span>
+                      <span className={styles.detailValue}>{formatCurrency(unit.price)}</span>
+                    </div>
+                    <div className={styles.detailItem}>
+                      <span className={styles.detailLabel}>الحالة:</span>
+                      <span
+                        className={`${styles.detailValue} ${unit.status ? styles[unit.status.toLowerCase() + "Status"] : ""}`}
+                      >
+                        {unit.status ? unitStatusTranslations[unit.status] : "غير محدد"}
+                      </span>
+                    </div>
+                    {unit.status === "SOLD" && unit.sold_date && (
+                      <div className={styles.detailItem}>
+                        <span className={styles.detailLabel}>تاريخ البيع:</span>
+                        <span className={styles.detailValue}>{formatDate(unit.sold_date)}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.unitsList}>
+              {filteredAndSortedUnits.map((unit) => (
+                <div key={unit.id} className={getUnitListItemClass(unit.status)}>
+                  <div className={styles.unitListHeader}>
+                    <h3 className={styles.unitName}>{unit.name}</h3>
+                    <div className={styles.actions}>
+                      <button className={styles.infoButton} onClick={() => openInfoModal(unit)} aria-label="معلومات">
+                        <Info size={18} />
+                      </button>
+                      <button className={styles.editButton} onClick={() => openEditModal(unit)} aria-label="تعديل">
+                        <Edit size={18} />
+                      </button>
+                      <button className={styles.deleteButton} onClick={() => openDeleteModal(unit)} aria-label="حذف">
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className={styles.unitListContent}>
+                    <div className={styles.unitListDetails}>
+                      <div className={styles.detailItem}>
+                        <span className={styles.detailLabel}>المساحة:</span>
+                        <span className={styles.detailValue}>{formatArea(unit.area)}</span>
+                      </div>
+                      <div className={styles.detailItem}>
+                        <span className={styles.detailLabel}>السعر:</span>
+                        <span className={styles.detailValue}>{formatCurrency(unit.price)}</span>
+                      </div>
+                      <div className={styles.detailItem}>
+                        <span className={styles.detailLabel}>الحالة:</span>
+                        <span
+                          className={`${styles.detailValue} ${unit.status ? styles[unit.status.toLowerCase() + "Status"] : ""}`}
+                        >
+                          {unit.status ? unitStatusTranslations[unit.status] : "غير محدد"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </>
       )}
 

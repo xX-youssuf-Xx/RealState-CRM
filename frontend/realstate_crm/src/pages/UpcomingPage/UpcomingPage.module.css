@@ -1,799 +1,1019 @@
-
 .employeesPage {
-    padding: 1.5rem;
-    direction: rtl;
-  }
-  
+  padding: 1.5rem;
+  direction: rtl;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  color: #0a2351;
+  font-size: 1.75rem;
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.searchContainer {
+  position: relative;
+  width: 250px;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #0a2351;
+  box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #d4af37;
+  color: #0a2351;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:hover {
+  background-color: #f5cc50;
+}
+
+.addButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  color: #666;
+}
+
+.emptyState p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.employeesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Base employee card styles */
+.employeeCard {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.employeeCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Role-specific card styles */
+.adminEmployee {
+  border-right: 4px solid #d4af37;
+}
+
+.managerEmployee {
+  border-right: 4px solid #2e7d32;
+}
+
+.salesEmployee {
+  border-right: 4px solid #0a2351;
+}
+
+.deletedEmployee {
+  border: 2px dashed #e53935;
+  background-color: #f5f5f5;
+  opacity: 0.7;
+}
+
+.deletedEmployee:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styles */
+.employeeHeader {
+  background-color: #0a2351;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.adminHeader {
+  background-color: #d4af37;
+  color: #0a2351;
+}
+
+.managerHeader {
+  background-color: #2e7d32;
+}
+
+.salesHeader {
+  background-color: #0a2351;
+}
+
+.deletedHeader {
+  background-color: #9e9e9e;
+}
+
+.employeeName {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editButton,
+.deleteButton,
+.infoButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.adminHeader .editButton,
+.adminHeader .deleteButton,
+.adminHeader .infoButton {
+  color: #0a2351;
+}
+
+.infoButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.editButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.deleteButton:hover {
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.deleteButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.employeeDetails {
+  padding: 1rem;
+}
+
+.detailItem {
+  margin-bottom: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detailItem:last-child {
+  margin-bottom: 0;
+}
+
+.detailLabel {
+  font-weight: bold;
+  color: #555;
+}
+
+.detailValue {
+  color: #333;
+}
+
+/* Role-specific text styles */
+.adminRole {
+  color: #d4af37;
+  font-weight: bold;
+}
+
+.managerRole {
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.salesRole {
+  color: #0a2351;
+  font-weight: bold;
+}
+
+.deletedRole {
+  color: #e53935;
+  font-weight: bold;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  background-color: #0a2351;
+  color: white;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.adminHeader .closeButton {
+  color: #0a2351;
+}
+
+.adminHeader .closeButton:hover {
+  background-color: rgba(10, 35, 81, 0.1);
+}
+
+.form {
+  padding: 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: #0a2351;
+  box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.cancelButton {
+  background-color: #f5f5f5;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancelButton:hover {
+  background-color: #e5e5e5;
+}
+
+.cancelButton:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #d4af37;
+  color: #0a2351;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #f5cc50;
+}
+
+.submitButton:disabled {
+  background-color: #cccccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* Info Modal Styles */
+.infoContent {
+  padding: 1.5rem;
+}
+
+.infoItem {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.infoLabel {
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 0.25rem;
+}
+
+.infoValue {
+  color: #333;
+}
+
+.infoActions {
+  padding: 0 1.5rem 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.closeInfoButton {
+  background-color: #0a2351;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.closeInfoButton:hover {
+  background-color: #0d2b63;
+}
+
+/* Confirmation Modal */
+.confirmModal {
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.confirmModal h2 {
+  color: #0a2351;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.confirmModal p {
+  margin-bottom: 1.5rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.deleteConfirmButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.deleteConfirmButton:hover {
+  background-color: #f44336;
+}
+
+.deleteConfirmButton:disabled {
+  background-color: #ffcdd2;
+  color: #b71c1c;
+  cursor: not-allowed;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
   .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
-  
-  .title {
-    color: #0a2351;
-    font-size: 1.75rem;
-    margin: 0;
-  }
-  
-  .headerActions {
-    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 1rem;
-    align-items: center;
   }
-  
-  .searchContainer {
-    position: relative;
-    width: 250px;
-  }
-  
-  .searchIcon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #666;
-  }
-  
-  .searchInput {
+
+  .headerActions {
     width: 100%;
-    padding: 0.5rem 2.5rem 0.5rem 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.9rem;
+    flex-direction: column;
   }
-  
-  .searchInput:focus {
-    outline: none;
-    border-color: #0a2351;
-    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+
+  .searchContainer {
+    width: 100%;
   }
-  
-  .addButton {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background-color: #d4af37;
-    color: #0a2351;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .addButton:hover {
-    background-color: #f5cc50;
-  }
-  
-  .addButton:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-  }
-  
-  .emptyState {
-    text-align: center;
-    padding: 3rem;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    color: #666;
-  }
-  
-  .emptyState p {
-    margin-bottom: 1.5rem;
-    font-size: 1.1rem;
-  }
-  
+
   .employeesGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: 1fr;
   }
-  
-  /* Base employee card styles */
-  .employeeCard {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .employeeCard:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Role-specific card styles */
-  .adminEmployee {
-    border-right: 4px solid #d4af37;
-  }
-  
-  .managerEmployee {
-    border-right: 4px solid #2e7d32;
-  }
-  
-  .salesEmployee {
-    border-right: 4px solid #0a2351;
-  }
-  
-  .deletedEmployee {
-    border: 2px dashed #e53935;
-    background-color: #f5f5f5;
-    opacity: 0.7;
-  }
-  
-  .deletedEmployee:hover {
-    transform: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Header styles */
-  .employeeHeader {
-    background-color: #0a2351;
-    color: white;
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .adminHeader {
-    background-color: #d4af37;
-    color: #0a2351;
-  }
-  
-  .managerHeader {
-    background-color: #2e7d32;
-  }
-  
-  .salesHeader {
-    background-color: #0a2351;
-  }
-  
-  .deletedHeader {
-    background-color: #9e9e9e;
-  }
-  
-  .employeeName {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  .actions {
-    display: flex;
-    gap: 0.5rem;
-  }
-  
-  .editButton,
-  .deleteButton,
-  .infoButton {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-  }
-  
-  .adminHeader .editButton,
-  .adminHeader .deleteButton,
-  .adminHeader .infoButton {
-    color: #0a2351;
-  }
-  
-  .infoButton:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-  }
-  
-  .editButton:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-  }
-  
-  .deleteButton:hover {
-    background-color: rgba(255, 0, 0, 0.2);
-  }
-  
-  .deleteButton:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-  
-  .employeeDetails {
-    padding: 1rem;
-  }
-  
-  .detailItem {
-    margin-bottom: 0.75rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .detailItem:last-child {
-    margin-bottom: 0;
-  }
-  
-  .detailLabel {
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .detailValue {
-    color: #333;
-  }
-  
-  /* Role-specific text styles */
-  .adminRole {
-    color: #d4af37;
-    font-weight: bold;
-  }
-  
-  .managerRole {
-    color: #2e7d32;
-    font-weight: bold;
-  }
-  
-  .salesRole {
-    color: #0a2351;
-    font-weight: bold;
-  }
-  
-  .deletedRole {
-    color: #e53935;
-    font-weight: bold;
-  }
-  
-  /* Modal Styles */
-  .modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    padding: 1rem;
-  }
-  
-  .modal {
-    background-color: white;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  .modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-    background-color: #0a2351;
-    color: white;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-  }
-  
-  .modalHeader h2 {
-    margin: 0;
-    font-size: 1.25rem;
-  }
-  
-  .closeButton {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-  }
-  
-  .closeButton:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-  }
-  
-  .adminHeader .closeButton {
-    color: #0a2351;
-  }
-  
-  .adminHeader .closeButton:hover {
-    background-color: rgba(10, 35, 81, 0.1);
-  }
-  
-  .form {
-    padding: 1.5rem;
-  }
-  
-  .formGroup {
-    margin-bottom: 1.25rem;
-  }
-  
-  .formGroup label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .formGroup input,
-  .formGroup select,
-  .formGroup textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: inherit;
-  }
-  
-  .formGroup input:focus,
-  .formGroup select:focus,
-  .formGroup textarea:focus {
-    outline: none;
-    border-color: #0a2351;
-    box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
-  }
-  
+
   .formActions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1.5rem;
-  }
-  
-  .cancelButton {
-    background-color: #f5f5f5;
-    color: #333;
-    border: none;
-    border-radius: 4px;
-    padding: 0.75rem 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .cancelButton:hover {
-    background-color: #e5e5e5;
-  }
-  
-  .cancelButton:disabled {
-    background-color: #f5f5f5;
-    color: #999;
-    cursor: not-allowed;
-  }
-  
-  .submitButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    background-color: #d4af37;
-    color: #0a2351;
-    border: none;
-    border-radius: 4px;
-    padding: 0.75rem 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submitButton:hover {
-    background-color: #f5cc50;
-  }
-  
-  .submitButton:disabled {
-    background-color: #cccccc;
-    color: #666;
-    cursor: not-allowed;
-  }
-  
-  /* Info Modal Styles */
-  .infoContent {
-    padding: 1.5rem;
-  }
-  
-  .infoItem {
-    margin-bottom: 1rem;
-    display: flex;
     flex-direction: column;
   }
-  
-  .infoLabel {
-    font-weight: bold;
-    color: #555;
-    margin-bottom: 0.25rem;
-  }
-  
-  .infoValue {
-    color: #333;
-  }
-  
-  .infoActions {
-    padding: 0 1.5rem 1.5rem;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .closeInfoButton {
-    background-color: #0a2351;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.75rem 2rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .closeInfoButton:hover {
-    background-color: #0d2b63;
-  }
-  
-  /* Confirmation Modal */
-  .confirmModal {
-    background-color: white;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 400px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    text-align: center;
-  }
-  
-  .confirmModal h2 {
-    color: #0a2351;
-    margin-top: 0;
-    margin-bottom: 1rem;
-  }
-  
-  .confirmModal p {
-    margin-bottom: 1.5rem;
-    color: #555;
-    line-height: 1.5;
-  }
-  
-  .confirmActions {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-  }
-  
+
+  .cancelButton,
+  .submitButton,
   .deleteConfirmButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    background-color: #e53935;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.75rem 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .deleteConfirmButton:hover {
-    background-color: #f44336;
-  }
-  
-  .deleteConfirmButton:disabled {
-    background-color: #ffcdd2;
-    color: #b71c1c;
-    cursor: not-allowed;
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 768px) {
-    .header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-  
-    .headerActions {
-      width: 100%;
-      flex-direction: column;
-    }
-  
-    .searchContainer {
-      width: 100%;
-    }
-  
-    .employeesGrid {
-      grid-template-columns: 1fr;
-    }
-  
-    .formActions {
-      flex-direction: column;
-    }
-  
-    .cancelButton,
-    .submitButton,
-    .deleteConfirmButton {
-      width: 100%;
-    }
-  }
-  
-
-
-  .tasksPage {
-    padding: 20px;
-    min-height: 100vh;
-    direction: rtl;
-  }
-  
-  .header {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-  }
-  
-  .title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-  }
-  
-  .headerActions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  .searchContainer {
-    position: relative;
-    flex: 1;
-    max-width: 300px;
-  }
-  
-  .searchIcon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #888;
-  }
-  
-  .searchInput {
     width: 100%;
-    padding: 8px 35px 8px 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.9rem;
   }
-  
+}
+
+.tasksPage {
+  padding: 1.5rem;
+  min-height: 100vh;
+  direction: rtl;
+}
+
+/* Header styles to match LeadPage */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-direction: row;
+  gap: 0;
+}
+
+.title {
+  color: #0a2351;
+  font-size: 1.75rem;
+  margin: 0;
+}
+
+.headerActions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.searchContainer {
+  position: relative;
+  width: 250px;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #0a2351;
+  box-shadow: 0 0 0 2px rgba(10, 35, 81, 0.2);
+}
+
+/* View Toggle Styles */
+.viewToggle {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.viewButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.viewButton:hover {
+  background-color: #f5f5f5;
+}
+
+.activeView {
+  background-color: #0a2351;
+  color: white;
+  border-color: #0a2351;
+}
+
+.activeView:hover {
+  background-color: #0d2b63;
+}
+
+/* Card View Styles */
+.tasksContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.taskCard {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-right: 4px solid #0a2351;
+  cursor: pointer;
+}
+
+.taskCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* List View Styles */
+.tasksListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.taskListItem {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-right: 4px solid #0a2351;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.taskListItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.taskListHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.taskListHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.taskListContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.taskListDetails {
+  display: flex;
+  gap: 2rem;
+}
+
+.overdueTask {
+  border-right-color: #d32f2f;
+}
+
+.todayTask {
+  border-right-color: #f57c00;
+}
+
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #0a2351;
+}
+
+.taskDate {
+  font-size: 0.9rem;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+
+}
+
+.infoButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.infoButton:hover {
+  color: #0a2351;
+  background-color: rgba(10, 35, 81, 0.1);
+}
+
+.taskContent {
+  padding: 0 1rem 1rem;
+}
+
+.taskName {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  margin-top: 0;
+  color: #333;
+}
+
+.taskDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.detailLabel {
+  font-weight: 500;
+  margin-left: 0.5rem;
+  color: #666;
+}
+
+.detailValue {
+  color: #333;
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #0a2351;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  text-decoration: underline;
+}
+
+.linkButton:hover {
+  color: #d4af37;
+}
+
+.linkIcon {
+  margin-right: 0.25rem;
+}
+
+.actionButton {
+  background-color: #0a2351;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.actionButton:hover {
+  background-color: #0d2b63;
+}
+
+.taskFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 1rem 1rem;
+}
+
+.taskStatus {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: white;
+}
+
+.upcoming {
+  background-color: #2e7d32;
+}
+
+.today {
+  background-color: #f57c00;
+}
+
+.overdue {
+  background-color: #d32f2f;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  color: #666;
+}
+
+.emptyState p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  background-color: #0a2351;
+  color: white;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.infoContent {
+  padding: 1.5rem;
+}
+
+.infoSection {
+  margin-bottom: 1.5rem;
+}
+
+.infoSection h3 {
+  color: #0a2351;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #d4af37;
+  padding-bottom: 0.5rem;
+}
+
+.infoItem {
+  margin-bottom: 0.75rem;
+}
+
+.infoLabel {
+  font-weight: bold;
+  color: #555;
+  display: inline-block;
+  width: 35%;
+}
+
+.infoValue {
+  color: #333;
+  display: inline-block;
+  width: 65%;
+}
+
+.notesBox {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 1rem;
+  white-space: pre-line;
+}
+
+.modalFooter {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.closeModalButton {
+  background-color: #f5f5f5;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.closeModalButton:hover {
+  background-color: #e5e5e5;
+}
+
+.viewLeadButton {
+  background-color: #0a2351;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.viewLeadButton:hover {
+  background-color: #0d2b63;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .headerActions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .searchContainer {
+    width: 100%;
+  }
+
   .tasksContainer {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr;
   }
-  
-  .taskCard {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    display: flex;
+
+  .taskListDetails {
     flex-direction: column;
-    transition: transform 0.2s;
-    border-right: 4px solid #2e7d32;
+    gap: 0.5rem;
   }
-  
-  .taskCard:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  }
-  
-  .overdueTask {
-    border-right-color: #d32f2f;
-  }
-  
-  .todayTask {
-    border-right-color: #f57c00;
-  }
-  
-  .taskHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .taskDate {
-    font-size: 0.8rem;
-    color: #666;
-  }
-  
-  .infoButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #555;
-    display: flex;
-    align-items: center;
-    padding: 0;
-  }
-  
-  .infoButton:hover {
-    color: #0056b3;
-  }
-  
-  .taskContent {
-    flex: 1;
-  }
-  
-  .taskName {
-    font-size: 1.1rem;
-    margin-bottom: 8px;
-    color: #333;
-  }
-  
-  .taskDetails {
-    display: flex;
+
+  .taskListContent {
     flex-direction: column;
-    gap: 5px;
+    align-items: flex-start;
+    gap: 1rem;
   }
-  
-  .detailItem {
-    display: flex;
-    font-size: 0.9rem;
-  }
-  
-  .detailLabel {
-    font-weight: 500;
-    margin-left: 5px;
-    color: #666;
-  }
-  
-  .detailValue {
-    color: #333;
-  }
-  
-  .taskFooter {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-  }
-  
-  .taskStatus {
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    color: white;
-  }
-  
-  .upcoming {
-    background-color: #2e7d32;
-  }
-  
-  .today {
-    background-color: #f57c00;
-  }
-  
-  .overdue {
-    background-color: #d32f2f;
-  }
-  
-  .emptyState {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-  }
-  
-  /* Modal Styles */
-  .modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
+
+  .actionButton {
+    width: 100%;
     justify-content: center;
-    align-items: center;
-    z-index: 1000;
   }
-  
-  .modal {
-    background-color: #fff;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  .modalHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .modalHeader h2 {
-    margin: 0;
-    font-size: 1.4rem;
-  }
-  
-  .closeButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #555;
-    display: flex;
-    align-items: center;
-    padding: 0;
-  }
-  
-  .closeButton:hover {
-    color: #d32f2f;
-  }
-  
-  .infoContent {
-    padding: 20px;
-  }
-  
-  .infoSection {
-    margin-bottom: 20px;
-  }
-  
-  .infoSection h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-    color: #333;
-  }
-  
-  .infoItem {
-    margin-bottom: 8px;
-    display: flex;
-  }
-  
-  .infoLabel {
-    font-weight: 500;
-    margin-left: 10px;
-    color: #666;
-    min-width: 120px;
-  }
-  
-  .infoValue {
-    color: #333;
-  }
-  
+
   .modalFooter {
-    padding: 15px 20px;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
   }
-  
-  .closeModalButton {
-    padding: 8px 16px;
-    border: none;
-    background-color: #eee;
-    color: #333;
-    border-radius: 4px;
-    font-weight: 500;
-    cursor: pointer;
+
+  .closeModalButton,
+  .viewLeadButton {
+    width: 100%;
   }
-  
-  .closeModalButton:hover {
-    background-color: #ddd;
-  }
+}

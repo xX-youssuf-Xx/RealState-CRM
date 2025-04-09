@@ -15,13 +15,6 @@ interface NavItem {
 }
 
 // Define the links for the sidebar
-const sidebarLinks: NavItem[] = [
-  { path: "/dashboard", label: "الرئيسية", icon: <Home size={20} /> },
-  // { path: "/upcoming", label: "المواعيد", icon: <Calendar size={20} /> },
-  { path: "/leads", label: "العملاء", icon: <Users size={20} /> },
-  { path: "/employees", label: "الموظفين", icon: <Briefcase size={20} /> },
-  { path: "/projects", label: "المشاريع", icon: <Building2 size={20} /> },
-]
 
 interface SidebarProps {
   isMobileSidebarOpen: boolean
@@ -33,6 +26,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobileSidebarOpen, closeMobileSideb
   const location = useLocation()
   const navigate = useNavigate() // Add useNavigate hook
   const [isExpanded, setIsExpanded] = useState(false)
+  const isAdmin = employee?.role === "ADMIN"
+  
+  const sidebarLinks: NavItem[] =  isAdmin ? [
+    { path: "/dashboard", label: "الرئيسية", icon: <Home size={20} /> },
+    { path: "/upcoming", label: "المواعيد", icon: <Calendar size={20} /> },
+    { path: "/leads", label: "العملاء", icon: <Users size={20} /> },
+    { path: "/employees", label: "الموظفين", icon: <Briefcase size={20} /> },
+    { path: "/projects", label: "المشاريع", icon: <Building2 size={20} /> },
+  ] : [
+    { path: "/dashboard", label: "الرئيسية", icon: <Home size={20} /> },
+    { path: "/upcoming", label: "المواعيد", icon: <Calendar size={20} /> },
+    { path: "/leads", label: "العملاء", icon: <Users size={20} /> },
+  ] ;
+
 
   // Check if we're on the login page
   const isLoginPage = location.pathname === "/login"

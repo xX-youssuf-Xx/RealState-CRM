@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect, useMemo } from "react"
-import { Edit, Trash2, Plus, X, Search, Info } from "lucide-react"
+import { Edit, Trash2, Plus, X, Search, Info, Grid, List } from "lucide-react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useGetAllEmployees, type Employee } from "../../hooks/Employees/useGetAllEmployees"
@@ -64,6 +64,7 @@ const EmployeesPage: React.FC = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null)
   const [formData, setFormData] = useState<EmployeeFormData>(initialFormData)
+  const [viewMode, setViewMode] = useState<"cards" | "list">("cards")
 
   const { execute: fetchEmployees, isLoading: isLoadingEmployees } = useGetAllEmployees()
   const { execute: createEmployee, isLoading: isCreating } = useCreateEmployee()
@@ -193,7 +194,7 @@ const EmployeesPage: React.FC = () => {
     }
   }
 
-  // Get CSS class based on employee role
+  // Get CSS class based on employee role for card view
   const getEmployeeCardClass = (role: string) => {
     const upperRole = role.toUpperCase()
     if (upperRole === "DELETED") {
@@ -206,6 +207,21 @@ const EmployeesPage: React.FC = () => {
       return `${styles.employeeCard} ${styles.salesEmployee}`
     }
     return styles.employeeCard
+  }
+
+  // Get CSS class based on employee role for list view
+  const getEmployeeListItemClass = (role: string) => {
+    const upperRole = role.toUpperCase()
+    if (upperRole === "DELETED") {
+      return `${styles.employeeListItem} ${styles.deletedListItem}`
+    } else if (upperRole === "ADMIN") {
+      return `${styles.employeeListItem} ${styles.adminListItem}`
+    } else if (upperRole === "MANAGER") {
+      return `${styles.employeeListItem} ${styles.managerListItem}`
+    } else if (upperRole === "SALES") {
+      return `${styles.employeeListItem} ${styles.salesListItem}`
+    }
+    return styles.employeeListItem
   }
 
   return (
@@ -222,6 +238,22 @@ const EmployeesPage: React.FC = () => {
               onChange={handleSearchChange}
               className={styles.searchInput}
             />
+          </div>
+          <div className={styles.viewToggle}>
+            <button
+              className={`${styles.viewButton} ${viewMode === "cards" ? styles.activeView : ""}`}
+              onClick={() => setViewMode("cards")}
+              aria-label="عرض البطاقات"
+            >
+              <Grid size={18} />
+            </button>
+            <button
+              className={`${styles.viewButton} ${viewMode === "list" ? styles.activeView : ""}`}
+              onClick={() => setViewMode("list")}
+              aria-label="عرض القائمة"
+            >
+              <List size={18} />
+            </button>
           </div>
           <button className={styles.addButton} onClick={openCreateModal} disabled={isLoadingEmployees}>
             <Plus size={18} />
@@ -246,7 +278,7 @@ const EmployeesPage: React.FC = () => {
             </>
           )}
         </div>
-      ) : (
+      ) : viewMode === "cards" ? (
         <div className={styles.employeesGrid}>
           {filteredAndSortedEmployees.map((employee) => (
             <div key={employee.id} className={getEmployeeCardClass(employee.role)}>
@@ -284,6 +316,51 @@ const EmployeesPage: React.FC = () => {
                 <div className={styles.detailItem}>
                   <span className={styles.detailLabel}>تاريخ البدء:</span>
                   <span className={styles.detailValue}>{formatDate(employee.created_at.toString())}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.employeesList}>
+          {filteredAndSortedEmployees.map((employee) => (
+            <div key={employee.id} className={getEmployeeListItemClass(employee.role)}>
+              <div className={styles.employeeListHeader}>
+                <h3 className={styles.employeeName}>{employee.name}</h3>
+                <div className={styles.actions}>
+                  <button className={styles.infoButton} onClick={() => openInfoModal(employee)} aria-label="معلومات">
+                    <Info size={18} />
+                  </button>
+                  <button className={styles.editButton} onClick={() => openEditModal(employee)} aria-label="تعديل">
+                    <Edit size={18} />
+                  </button>
+                  <button
+                    className={styles.deleteButton}
+                    onClick={() => openDeleteModal(employee)}
+                    aria-label="حذف"
+                    disabled={employee.role.toUpperCase() === "DELETED"}
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+              </div>
+
+              <div className={styles.employeeListContent}>
+                <div className={styles.employeeListDetails}>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>رقم الهاتف:</span>
+                    <span className={styles.detailValue}>{employee.number}</span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>الوظيفة:</span>
+                    <span className={`${styles.detailValue} ${styles[employee.role.toLowerCase() + "Role"]}`}>
+                      {roleTranslations[employee.role.toUpperCase()] || employee.role}
+                    </span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>تاريخ البدء:</span>
+                    <span className={styles.detailValue}>{formatDate(employee.created_at.toString())}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -422,9 +499,7 @@ const EmployeesPage: React.FC = () => {
               </div>
               <div className={styles.infoItem}>
                 <span className={styles.infoLabel}>ملاحظات:</span>
-                <span className={`${styles.infoValue} ${styles[selectedEmployee.role.toLowerCase() + "Role"]}`}>
-                  { selectedEmployee.notes || "لا توجد ملاحظات"}  
-                </span>
+                <span className={styles.infoValue}>{selectedEmployee.notes || "لا توجد ملاحظات"}</span>
               </div>
 
               <div className={styles.infoItem}>
@@ -435,7 +510,6 @@ const EmployeesPage: React.FC = () => {
                 <span className={styles.infoLabel}>آخر تحديث:</span>
                 <span className={styles.infoValue}>{formatDate(selectedEmployee.updated_at.toString())}</span>
               </div>
-
             </div>
 
             <div className={styles.infoActions}>

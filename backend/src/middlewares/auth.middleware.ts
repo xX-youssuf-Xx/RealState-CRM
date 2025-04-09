@@ -35,7 +35,8 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
 
   jwt.verify(token, jwtSecret, (err, user) => {
     if (err) {
-      res.sendStatus(403); // Forbidden
+          res.status(403).json({ message: 'حدث خطأ ما برجاء المحاولة لاحقا' });
+ // Forbidden
       return;
     }
 
@@ -52,7 +53,8 @@ export const authorize = (roles: string[]) => {
         if (user && roles.includes(user.role)) {
       next();
     } else {
-      res.sendStatus(403); // Forbidden
+          res.status(403).json({ message: 'حدث خطأ ما برجاء المحاولة لاحقا' });
+ // Forbidden
     }
   };
 };
@@ -61,9 +63,10 @@ export const checkDeleted = () => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const user = (req as AuthRequest).user;
         if (user && (user.role !== 'DELETED')) {
-      next();
+      next(); 
     } else {
-      res.sendStatus(403); 
+          res.status(403).json({ message: 'حدث خطأ ما برجاء المحاولة لاحقا' });
+ 
     }
   };
 };
