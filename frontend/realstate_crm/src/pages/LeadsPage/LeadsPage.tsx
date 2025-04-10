@@ -900,7 +900,7 @@ const LeadsPage: React.FC = () => {
               <div className={styles.formGroup}>
                 <label htmlFor="number">رقم الهاتف</label>
                 <input
-                  type="text"
+                  type="number"
                   id="number"
                   name="number"
                   value={formData.number}

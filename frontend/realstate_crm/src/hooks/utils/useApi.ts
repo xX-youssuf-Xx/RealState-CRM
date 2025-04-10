@@ -1,9 +1,10 @@
 import { useState, useCallback } from "react";
-
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export const useApiFetch = <T>() => {
+  const apiUrlBase = import.meta.env.VITE_API_BASE_URL; 
   const [data, setData] = useState<T | null>(null);
+
   const [error, setError] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -21,10 +22,10 @@ export const useApiFetch = <T>() => {
       try {
         // Get the bearer token from storage
         const token = localStorage.getItem('token');
-        
+
         // Check if body is FormData - if so, don't set Content-Type header (browser will set it)
         const isFormData = body instanceof FormData;
-        
+
         const headers = {
           // Only set Content-Type for non-FormData requests
           ...(!isFormData && { 'Content-Type': 'application/json' }),
@@ -52,7 +53,8 @@ export const useApiFetch = <T>() => {
         }
 
         // const response = await fetch(`${"http://localhost:3001/api"}/${url}`, fetchOptions);
-        const response = await fetch(`${"https://amaar.egypt-tech.com/api"}/${url}`, fetchOptions);
+        // const response = await fetch(`${"https://amaar.egypt-tech.com/api"}/${url}`, fetchOptions);
+        const response = await fetch(`${apiUrlBase}/${url}`, fetchOptions);
 
         if (!response.ok) {
           const errorData = await response.json();

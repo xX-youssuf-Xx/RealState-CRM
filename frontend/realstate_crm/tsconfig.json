@@ -8,6 +8,7 @@
     "resolveJsonModule": true, // Allow importing JSON files
     "moduleDetection": "force", // Treat files as modules
     "isolatedModules": true, // Ensure files can be safely compiled separately (needed by many bundlers)
+    "types": ["vite/client", "node", "react"], // Add "vite/client" here
 
     /* Strict Type Checking */
     "strict": true, // Enable all strict type-checking options

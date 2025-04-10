@@ -153,20 +153,25 @@ const EmployeesPage: React.FC = () => {
     setIsInfoModalOpen(false)
   }
 
+  // Update the handleSubmit function to only send changed fields
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     try {
       if (selectedEmployee) {
         // Update existing employee
-        await updateEmployee(
-          Number(selectedEmployee.id),
-          formData.name,
-          formData.number,
-          formData.role,
-          formData.notes,
-          formData.password || undefined,
-        )
+        const updates: Record<string, string> = {}
+
+        // Only include fields that have changed
+        if (formData.name !== selectedEmployee.name) updates.name = formData.name
+        if (formData.number !== selectedEmployee.number) updates.number = formData.number
+        if (formData.role !== selectedEmployee.role.toUpperCase()) updates.role = formData.role
+        if (formData.notes !== (selectedEmployee.notes || "")) updates.notes = formData.notes
+
+        // Always include password if it's not empty
+        if (formData.password) updates.password = formData.password
+
+        await updateEmployee(Number(selectedEmployee.id), updates)
         toast.success("تم تحديث بيانات الموظف بنجاح")
       } else {
         // Create new employee
@@ -396,7 +401,7 @@ const EmployeesPage: React.FC = () => {
               <div className={styles.formGroup}>
                 <label htmlFor="number">رقم الهاتف</label>
                 <input
-                  type="text"
+                  type="number"
                   id="number"
                   name="number"
                   value={formData.number}

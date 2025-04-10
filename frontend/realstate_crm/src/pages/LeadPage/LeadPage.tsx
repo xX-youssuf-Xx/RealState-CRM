@@ -1,49 +1,55 @@
-﻿"use client"
+﻿"use client";
 
-import type React from "react"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { Info, Plus, X, Search, ArrowRight, List, Grid } from "lucide-react"
-import { useGetActionsByCustomerId, type Action } from "../../hooks/Actions/useGetActionsByCustomerId"
-import { useGetLead, type Lead } from "../../hooks/Leads/useGetLead"
-import { useGetEmployee } from "../../hooks/Employees/useGetEmployee"
-import { useGetProject } from "../../hooks/Projects/useGetProject"
-import { useGetUnitById } from "../../hooks/Units/useGetUnitById"
-import { useGetAllProjects } from "../../hooks/Projects/useGetAllProjects"
-import { useGetUnitByProjectId } from "../../hooks/Units/useGetUnitByProjectId"
-import { useCreateAction } from "../../hooks/Actions/useCreateAction"
-import { useCreateTask } from "../../hooks/Tasks/useCreateTask"
-import { useUpdateUnit } from "../../hooks/Units/useUpdateUnit"
-import { useUpdateProject } from "../../hooks/Projects/useUpdateProject"
-import Loading from "../../components/Loading/Loading"
-import styles from "./LeadPage.module.css"
-import { useAuth } from "../../contexts/auth"
+import type React from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Info, Plus, X, Search, ArrowRight, List, Grid } from "lucide-react";
+import {
+  useGetActionsByCustomerId,
+  type Action,
+} from "../../hooks/Actions/useGetActionsByCustomerId";
+import { useGetLead, type Lead } from "../../hooks/Leads/useGetLead";
+import { useGetEmployee } from "../../hooks/Employees/useGetEmployee";
+import { useGetProject } from "../../hooks/Projects/useGetProject";
+import { useGetUnitById } from "../../hooks/Units/useGetUnitById";
+import { useGetAllProjects } from "../../hooks/Projects/useGetAllProjects";
+import { useGetUnitByProjectId } from "../../hooks/Units/useGetUnitByProjectId";
+import { useCreateAction } from "../../hooks/Actions/useCreateAction";
+import { useCreateTask } from "../../hooks/Tasks/useCreateTask";
+import { useUpdateUnit } from "../../hooks/Units/useUpdateUnit";
+import { useUpdateProject } from "../../hooks/Projects/useUpdateProject";
+import Loading from "../../components/Loading/Loading";
+import styles from "./LeadPage.module.css";
+import { useAuth } from "../../contexts/auth";
 
 interface ActionWithDetails extends Action {
-  salesName?: string
-  projectName?: string
-  unitName?: string
-  leadName?: string
+  salesName?: string;
+  projectName?: string;
+  unitName?: string;
+  leadName?: string;
 }
 
 const LeadActions: React.FC = () => {
-  const { leadId } = useParams<{ leadId: string }>()
-  const numericLeadId = Number.parseInt(leadId || "0", 10)
-  const { employee } = useAuth()
-  const isAdmin = employee?.role === "ADMIN"
+  const { leadId } = useParams<{ leadId: string }>();
+  const numericLeadId = Number.parseInt(leadId || "0", 10);
+  const { employee } = useAuth();
+  const isAdmin = employee?.role === "ADMIN";
   // State
-  const [actions, setActions] = useState<ActionWithDetails[]>([])
-  const [filteredActions, setFilteredActions] = useState<ActionWithDetails[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [viewMode, setViewMode] = useState<"cards" | "list">("cards")
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
-  const [selectedAction, setSelectedAction] = useState<ActionWithDetails | null>(null)
-  const [lead, setLead] = useState<Lead | null>(null)
-  const [allProjects, setAllProjects] = useState<any[]>([])
-  const [projectUnits, setProjectUnits] = useState<any[]>([])
-  const [lastAction, setLastAction] = useState<ActionWithDetails | null>(null)
+  const [actions, setActions] = useState<ActionWithDetails[]>([]);
+  const [filteredActions, setFilteredActions] = useState<ActionWithDetails[]>(
+    []
+  );
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<"cards" | "list">("cards");
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedAction, setSelectedAction] =
+    useState<ActionWithDetails | null>(null);
+  const [lead, setLead] = useState<Lead | null>(null);
+  const [allProjects, setAllProjects] = useState<any[]>([]);
+  const [projectUnits, setProjectUnits] = useState<any[]>([]);
+  const [lastAction, setLastAction] = useState<ActionWithDetails | null>(null);
 
   // Form state
   const [newAction, setNewAction] = useState({
@@ -55,108 +61,120 @@ const LeadActions: React.FC = () => {
     projectId: null as number | null,
     unitId: null as number | null,
     notes: "",
-  })
+  });
 
   // Task modal state
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [taskForm, setTaskForm] = useState({
     name: "",
     dueDate: "",
     dueTime: "10:00",
-  })
+  });
 
   // API Hooks
-  const { execute: createTask } = useCreateTask()
-  const { execute: fetchActions, isLoading: isLoadingActions } = useGetActionsByCustomerId()
-  const { execute: fetchLead } = useGetLead()
-  const { execute: fetchEmployee } = useGetEmployee()
-  const { execute: fetchProject } = useGetProject()
-  const { execute: fetchUnit } = useGetUnitById()
-  const { execute: fetchAllProjects } = useGetAllProjects()
-  const { execute: fetchUnitsByProject } = useGetUnitByProjectId()
-  const { execute: createAction, isLoading: isCreatingAction } = useCreateAction()
-  const { execute: updateUnit } = useUpdateUnit()
-  const { execute: updateProject } = useUpdateProject()
+  const { execute: createTask } = useCreateTask();
+  const { execute: fetchActions, isLoading: isLoadingActions } =
+    useGetActionsByCustomerId();
+  const { execute: fetchLead } = useGetLead();
+  const { execute: fetchEmployee } = useGetEmployee();
+  const { execute: fetchProject } = useGetProject();
+  const { execute: fetchUnit } = useGetUnitById();
+  const { execute: fetchAllProjects } = useGetAllProjects();
+  const { execute: fetchUnitsByProject } = useGetUnitByProjectId();
+  const { execute: createAction, isLoading: isCreatingAction } =
+    useCreateAction();
+  const { execute: updateUnit } = useUpdateUnit();
+  const { execute: updateProject } = useUpdateProject();
 
   // Load lead data and actions when component mounts
   useEffect(() => {
     const loadData = async () => {
       try {
         if (numericLeadId) {
-          const leadData = await fetchLead(numericLeadId)
-          setLead(leadData)
+          const leadData = await fetchLead(numericLeadId);
+          setLead(leadData);
 
-          const actionsData = await fetchActions(numericLeadId)
+          const actionsData = await fetchActions(numericLeadId);
 
           // Fetch additional details for each action
           const actionsWithDetails = await Promise.all(
             actionsData.map(async (action: Action) => {
-              const actionWithDetails: ActionWithDetails = { ...action }
+              const actionWithDetails: ActionWithDetails = { ...action };
 
               try {
                 if (action.sales_id) {
-                  const salesData = await fetchEmployee(action.sales_id)
-                  actionWithDetails.salesName = salesData.name
+                  const salesData = await fetchEmployee(action.sales_id);
+                  actionWithDetails.salesName = salesData.name;
                 }
 
                 if (action.project_id) {
-                  const projectData = await fetchProject(action.project_id)
-                  actionWithDetails.projectName = projectData.name
+                  const projectData = await fetchProject(action.project_id);
+                  actionWithDetails.projectName = projectData.name;
                 }
 
                 if (action.unit_id) {
-                  const unitData = await fetchUnit(action.unit_id)
-                  actionWithDetails.unitName = unitData.name
+                  const unitData = await fetchUnit(action.unit_id);
+                  actionWithDetails.unitName = unitData.name;
                 }
 
-                actionWithDetails.leadName = leadData.name
+                actionWithDetails.leadName = leadData.name;
               } catch (error) {
-                console.error("Error fetching action details:", error)
+                console.error("Error fetching action details:", error);
               }
 
-              return actionWithDetails
-            }),
-          )
+              return actionWithDetails;
+            })
+          );
 
-          setActions(actionsWithDetails)
-          setFilteredActions(actionsWithDetails)
+          setActions(actionsWithDetails);
+          setFilteredActions(actionsWithDetails);
 
           // Set the last action for reference
           if (actionsWithDetails.length > 0) {
             // Sort by created_at in descending order to get the most recent action
             const sortedActions = [...actionsWithDetails].sort(
-              (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-            )
-            setLastAction(sortedActions[0])
+              (a, b) =>
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+            );
+            setLastAction(sortedActions[0]);
           }
 
           // Load projects for the create action form
-          const projects = await fetchAllProjects()
-          setAllProjects(projects)
+          const projects = await fetchAllProjects();
+          setAllProjects(projects);
 
           // Use nullish coalescing to provide 0 if sales_id is null/undefined
           setNewAction((prev) => ({
             ...prev,
             salesId: leadData.sales_id ?? 0,
-          }))
+          }));
         }
       } catch (error) {
-        console.error("Error loading lead data:", error)
+        console.error("Error loading lead data:", error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    loadData()
-  }, [numericLeadId, fetchActions, fetchLead, fetchEmployee, fetchProject, fetchUnit, fetchAllProjects])
+    loadData();
+  }, [
+    numericLeadId,
+    fetchActions,
+    fetchLead,
+    fetchEmployee,
+    fetchProject,
+    fetchUnit,
+    fetchAllProjects,
+  ]);
 
   // Filter actions based on search query
   useEffect(() => {
-    let filtered = [...actions]
+    let filtered = [...actions];
 
     // Apply search filter
     if (searchQuery) {
-      const query = searchQuery.toLowerCase()
+      const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (action) =>
           action.notes?.toLowerCase().includes(query) ||
@@ -164,31 +182,37 @@ const LeadActions: React.FC = () => {
           action.salesName?.toLowerCase().includes(query) ||
           action.projectName?.toLowerCase().includes(query) ||
           action.unitName?.toLowerCase().includes(query) ||
-          stateTranslations[action.new_state as keyof typeof stateTranslations]?.toLowerCase().includes(query) ||
-          stateTranslations[action.prev_state as keyof typeof stateTranslations]?.toLowerCase().includes(query),
-      )
+          stateTranslations[action.new_state as keyof typeof stateTranslations]
+            ?.toLowerCase()
+            .includes(query) ||
+          stateTranslations[action.prev_state as keyof typeof stateTranslations]
+            ?.toLowerCase()
+            .includes(query)
+      );
     }
 
-    setFilteredActions(filtered)
-  }, [searchQuery, actions])
+    setFilteredActions(filtered);
+  }, [searchQuery, actions]);
 
   // Handle project selection in create form
   const handleProjectChange = async (projectId: number) => {
-    setNewAction((prev) => ({ ...prev, projectId, unitId: null }))
+    setNewAction((prev) => ({ ...prev, projectId, unitId: null }));
     if (projectId) {
       try {
-        const units = await fetchUnitsByProject(projectId)
+        const units = await fetchUnitsByProject(projectId);
         // Filter only available units (not SOLD)
-        const availableUnits = units.filter((unit: any) => unit.status !== "SOLD")
-        setProjectUnits(availableUnits)
+        const availableUnits = units.filter(
+          (unit: any) => unit.status !== "SOLD"
+        );
+        setProjectUnits(availableUnits);
       } catch (error) {
-        console.error("Error fetching units:", error)
-        setProjectUnits([])
+        console.error("Error fetching units:", error);
+        setProjectUnits([]);
       }
     } else {
-      setProjectUnits([])
+      setProjectUnits([]);
     }
-  }
+  };
 
   // Handle state change
   const handleStateChange = (state: string) => {
@@ -196,99 +220,106 @@ const LeadActions: React.FC = () => {
       ...prev,
       newState: state,
       newSubstate: "",
-    }))
+    }));
 
     // Check if state requires scheduling a task
-    const statesRequiringTask = ["VISITING", "MEETING", "FOLLOW_UP"]
+    const statesRequiringTask = ["VISITING", "MEETING", "FOLLOW_UP"];
     if (statesRequiringTask.includes(state)) {
       // Set default task name based on the selected state
       const taskNames = {
         VISITING: "زيارة للعميل",
         MEETING: "اجتماع مع العميل",
         FOLLOW_UP: "متابعة مع العميل",
-      }
+      };
 
       // Set tomorrow's date as default
-      const tomorrow = new Date()
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      const formattedDate = tomorrow.toISOString().split("T")[0]
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const formattedDate = tomorrow.toISOString().split("T")[0];
 
       setTaskForm({
         name: taskNames[state as keyof typeof taskNames],
         dueDate: formattedDate,
         dueTime: "10:00",
-      })
+      });
     }
-  }
+  };
 
   // Open info modal
   const openInfoModal = (action: ActionWithDetails) => {
-    setSelectedAction(action)
-    setIsInfoModalOpen(true)
-  }
+    setSelectedAction(action);
+    setIsInfoModalOpen(true);
+  };
 
-// Open create modal
-const openCreateModal = () => {
-  // If there's a last action, use its new state as the prev state for the new action
-  if (lastAction) {
-    setNewAction((prev) => ({
-      ...prev,
-      prevState: lastAction.new_state || "",  // Add fallback to "NEW"
-      prevSubstate: lastAction.new_substate || "",
-      salesId: lead?.sales_id || 0,
-    }))
-  } else if (lead?.state) {
-    // Otherwise use the lead's current state
-    setNewAction((prev) => ({
-      ...prev,
-      prevState: lead.state || "",  // Add fallback to "NEW"
-      prevSubstate: lead.substate || "",
-      salesId: lead.sales_id || 0,
-    }))
-  }
-  setIsCreateModalOpen(true)
-}
+  // Open create modal
+  const openCreateModal = () => {
+    // If there's a last action, use its new state as the prev state for the new action
+    if (lastAction) {
+      setNewAction((prev) => ({
+        ...prev,
+        prevState: lastAction.new_state || "", // Add fallback to "NEW"
+        prevSubstate: lastAction.new_substate || "",
+        salesId: lead?.sales_id || 0,
+      }));
+    } else if (lead?.state) {
+      // Otherwise use the lead's current state
+      setNewAction((prev) => ({
+        ...prev,
+        prevState: lead.state || "", // Add fallback to "NEW"
+        prevSubstate: lead.substate || "",
+        salesId: lead.sales_id || 0,
+      }));
+    }
+    setIsCreateModalOpen(true);
+  };
 
   // Close all modals
   const closeModals = () => {
-    setIsInfoModalOpen(false)
-    setIsCreateModalOpen(false)
-    setIsTaskModalOpen(false)
-    setSelectedAction(null)
-  }
+    setIsInfoModalOpen(false);
+    setIsCreateModalOpen(false);
+    setIsTaskModalOpen(false);
+    setSelectedAction(null);
+  };
 
   // Handle create action form submission
   const handleCreateAction = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       if (!numericLeadId || !newAction.salesId) {
-        throw new Error("Missing required fields")
+        throw new Error("Missing required fields");
       }
 
       // Check if unit and project are required
-      if (newAction.newState === "CLOSED_WON" && (!newAction.projectId || !newAction.unitId)) {
-        alert("يجب اختيار المشروع والوحدة عند إغلاق الصفقة بنجاح")
-        return
+      if (
+        newAction.newState === "CLOSED_WON" &&
+        (!newAction.projectId || !newAction.unitId)
+      ) {
+        alert("يجب اختيار المشروع والوحدة عند إغلاق الصفقة بنجاح");
+        return;
       }
 
       // Check if we should show the task modal instead of creating the action right away
-      const statesRequiringTask = ["VISITING", "MEETING", "FOLLOW_UP"]
+      const statesRequiringTask = ["VISITING", "MEETING", "FOLLOW_UP"];
       if (statesRequiringTask.includes(newAction.newState)) {
-        setIsTaskModalOpen(true)
-        return
+        setIsTaskModalOpen(true);
+        return;
       }
 
       // If not requiring a task, proceed with action creation
-      await createActionAndRefresh()
+      await createActionAndRefresh();
     } catch (error) {
-      console.error("Error creating action:", error)
-      alert("حدث خطأ أثناء إنشاء الإجراء")
+      console.error("Error creating action:", error);
+      alert("حدث خطأ أثناء إنشاء الإجراء");
     }
-  }
+  };
 
   // Create action and refresh data
-  const createActionAndRefresh = async (taskData?: { name: string; dueDate: string; dueTime: string }) => {
+  const createActionAndRefresh = async (taskData?: {
+    name: string;
+    dueDate: string;
+    dueTime: string;
+  }) => {
     // Create the action
     const actionResponse = await createAction(
       numericLeadId,
@@ -299,80 +330,100 @@ const openCreateModal = () => {
       newAction.newSubstate,
       newAction.projectId || undefined,
       newAction.unitId || undefined,
-      newAction.notes || undefined,
-    )
+      newAction.notes || undefined
+    );
 
     // Create a task if taskData is provided
     if (taskData) {
-      const isoDateTime = `${taskData.dueDate}T${taskData.dueTime}:00Z`
+      const isoDateTime = `${taskData.dueDate}T${taskData.dueTime}:00Z`;
 
-      await createTask(taskData.name, numericLeadId, newAction.salesId, actionResponse.id, isoDateTime)
+      await createTask(
+        taskData.name,
+        numericLeadId,
+        newAction.salesId,
+        actionResponse.id,
+        isoDateTime
+      );
     }
 
     // If CLOSED_WON, update the unit status and project sold count
-    if (newAction.newState === "CLOSED_WON" && newAction.unitId && newAction.projectId) {
-      const today = new Date().toISOString().split("T")[0]
+    if (
+      newAction.newState === "CLOSED_WON" &&
+      newAction.unitId &&
+      newAction.projectId
+    ) {
+      const today = new Date().toISOString().split("T")[0];
 
       // Update only the status and sold_date fields of the unit
-      await updateUnit(newAction.unitId, undefined, undefined, undefined, undefined, undefined, "SOLD", today)
+      await updateUnit(
+        newAction.unitId,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "SOLD",
+        today
+      );
 
       // Update the project's sold count
       // Create a FormData object with only the sold_count field
-      const projectFormData = new FormData()
+      const projectFormData = new FormData();
 
       // Get the current project to get its current sold count
-      const currentProject = await fetchProject(newAction.projectId)
-      const newSoldCount = (currentProject.sold_count || 0) + 1
+      const currentProject = await fetchProject(newAction.projectId);
+      const newSoldCount = (currentProject.sold_count || 0) + 1;
 
       // Add the sold_count field to the FormData
-      projectFormData.append("sold_count", newSoldCount.toString())
+      projectFormData.append("sold_count", newSoldCount.toString());
 
       // Update the project
-      await updateProject(newAction.projectId, projectFormData)
+      await updateProject(newAction.projectId, projectFormData);
     }
 
     // Refresh the action list
-    const actionsData = await fetchActions(numericLeadId)
+    const actionsData = await fetchActions(numericLeadId);
 
     // Fetch additional details for each action
     const actionsWithDetails = await Promise.all(
       actionsData.map(async (action: Action) => {
-        const actionWithDetails: ActionWithDetails = { ...action }
+        const actionWithDetails: ActionWithDetails = { ...action };
 
         try {
           if (action.sales_id) {
-            const salesData = await fetchEmployee(action.sales_id)
-            actionWithDetails.salesName = salesData.name
+            const salesData = await fetchEmployee(action.sales_id);
+            actionWithDetails.salesName = salesData.name;
           }
 
           if (action.project_id) {
-            const projectData = await fetchProject(action.project_id)
-            actionWithDetails.projectName = projectData.name
+            const projectData = await fetchProject(action.project_id);
+            actionWithDetails.projectName = projectData.name;
           }
 
           if (action.unit_id) {
-            const unitData = await fetchUnit(action.unit_id)
-            actionWithDetails.unitName = unitData.name
+            const unitData = await fetchUnit(action.unit_id);
+            actionWithDetails.unitName = unitData.name;
           }
 
-          actionWithDetails.leadName = lead?.name || ""
+          actionWithDetails.leadName = lead?.name || "";
         } catch (error) {
-          console.error("Error fetching action details:", error)
+          console.error("Error fetching action details:", error);
         }
 
-        return actionWithDetails
-      }),
-    )
+        return actionWithDetails;
+      })
+    );
 
-    setActions(actionsWithDetails)
-    setFilteredActions(actionsWithDetails)
+    setActions(actionsWithDetails);
+    setFilteredActions(actionsWithDetails);
 
     // Update the last action
     if (actionsWithDetails.length > 0) {
       const sortedActions = [...actionsWithDetails].sort(
-        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-      )
-      setLastAction(sortedActions[0])
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+      setLastAction(sortedActions[0]);
     }
 
     // Reset form and close modal
@@ -385,37 +436,37 @@ const openCreateModal = () => {
       projectId: null,
       unitId: null,
       notes: "",
-    })
-    closeModals()
+    });
+    closeModals();
 
     // Refresh projects list
-    const projects = await fetchAllProjects()
-    setAllProjects(projects)
-  }
+    const projects = await fetchAllProjects();
+    setAllProjects(projects);
+  };
 
   // Handle task submission
   const handleTaskSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      await createActionAndRefresh(taskForm)
-      setIsTaskModalOpen(false)
+      await createActionAndRefresh(taskForm);
+      setIsTaskModalOpen(false);
     } catch (error) {
-      console.error("Error creating task:", error)
-      alert("حدث خطأ أثناء إنشاء المهمة")
+      console.error("Error creating task:", error);
+      alert("حدث خطأ أثناء إنشاء المهمة");
     }
-  }
+  };
 
   // Format date
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
+    const date = new Date(dateString);
     return new Intl.DateTimeFormat("ar-EG", {
       year: "numeric",
       month: "short",
       day: "numeric",
       hour: "numeric",
       minute: "numeric",
-    }).format(date)
-  }
+    }).format(date);
+  };
 
   // Lead state translations
   const stateTranslations: Record<string, string> = {
@@ -429,7 +480,7 @@ const openCreateModal = () => {
     CLOSED_WON: " تم الإغلاق (نجاح) ",
     CLOSED_LOST: " تم الإغلاق (خسارة) ",
     FOLLOW_UP: " متابعة ",
-  }
+  };
 
   // State to substate mapping
   const stateToSubstate: Record<string, string[]> = {
@@ -441,9 +492,15 @@ const openCreateModal = () => {
     NEGOTIATING: ["PRICE_DISCUSSION", "PAYMENT_PLAN", "FINAL_OFFER"],
     QUALIFIED: ["READY_TO_BUY", "NEEDS_FINANCING", "CONSIDERING_OPTIONS"],
     CLOSED_WON: ["FULL_PAYMENT", "INSTALLMENT_PLAN"],
-    CLOSED_LOST: ["PRICE_ISSUE", "LOCATION_ISSUE", "COMPETITOR", "NOT_INTERESTED", "OTHER"],
+    CLOSED_LOST: [
+      "PRICE_ISSUE",
+      "LOCATION_ISSUE",
+      "COMPETITOR",
+      "NOT_INTERESTED",
+      "OTHER",
+    ],
     FOLLOW_UP: ["SCHEDULED", "PENDING"],
-  }
+  };
 
   // Substate translations
   const substateTranslations: Record<string, string> = {
@@ -485,7 +542,7 @@ const openCreateModal = () => {
 
     // Follow Up
     PENDING: "قيد الانتظار ",
-  }
+  };
 
   return (
     <div className={styles.actionsPage}>
@@ -504,14 +561,18 @@ const openCreateModal = () => {
           </div>
           <div className={styles.viewToggle}>
             <button
-              className={`${styles.viewButton} ${viewMode === "cards" ? styles.activeView : ""}`}
+              className={`${styles.viewButton} ${
+                viewMode === "cards" ? styles.activeView : ""
+              }`}
               onClick={() => setViewMode("cards")}
               aria-label="عرض البطاقات"
             >
               <Grid size={18} />
             </button>
             <button
-              className={`${styles.viewButton} ${viewMode === "list" ? styles.activeView : ""}`}
+              className={`${styles.viewButton} ${
+                viewMode === "list" ? styles.activeView : ""
+              }`}
               onClick={() => setViewMode("list")}
               aria-label="عرض القائمة"
             >
@@ -546,8 +607,14 @@ const openCreateModal = () => {
           {filteredActions.map((action) => (
             <div key={action.id} className={styles.actionCard}>
               <div className={styles.actionHeader}>
-                <div className={styles.actionDate}>{formatDate(action.created_at.toString())}</div>
-                <button className={styles.infoButton} onClick={() => openInfoModal(action)} aria-label="معلومات">
+                <div className={styles.actionDate}>
+                  {formatDate(action.created_at.toString())}
+                </div>
+                <button
+                  className={styles.infoButton}
+                  onClick={() => openInfoModal(action)}
+                  aria-label="معلومات"
+                >
                   <Info size={18} />
                 </button>
               </div>
@@ -555,44 +622,63 @@ const openCreateModal = () => {
               <div className={styles.actionContent}>
                 <div className={styles.actionStatusFlow}>
                   <div className={styles.stateBox}>
-                    <span className={styles.stateName}>{stateTranslations[action.prev_state || "NEW"]}</span>
+                    <span className={styles.stateName}>
+                      {stateTranslations[action.prev_state || "NEW"]}
+                    </span>
                     {action.prev_substate && (
-                      <span className={styles.substateName}>{substateTranslations[action.prev_substate]}</span>
+                      <span className={styles.substateName}>
+                        {substateTranslations[action.prev_substate]}
+                      </span>
                     )}
                   </div>
 
                   <ArrowRight className={styles.arrowIcon} size={20} />
 
                   <div
-                    className={`${styles.stateBox} ${action.new_state === "CLOSED_WON" ? styles.successState : action.new_state === "CLOSED_LOST" ? styles.dangerState : styles.activeState}`}
+                    className={`${styles.stateBox} ${
+                      action.new_state === "CLOSED_WON"
+                        ? styles.successState
+                        : action.new_state === "CLOSED_LOST"
+                        ? styles.dangerState
+                        : styles.activeState
+                    }`}
                   >
-                    <span className={styles.stateName}>{stateTranslations[action.new_state || "NEW"]}</span>
+                    <span className={styles.stateName}>
+                      {stateTranslations[action.new_state || "NEW"]}
+                    </span>
                     {action.new_substate && (
-                      <span className={styles.substateName}>{substateTranslations[action.new_substate]}</span>
+                      <span className={styles.substateName}>
+                        {substateTranslations[action.new_substate]}
+                      </span>
                     )}
                   </div>
                 </div>
 
                 <div className={styles.actionDetails}>
                   {isAdmin && (
-                    
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>المندوب:</span>
-                    <span className={styles.detailValue}>{action.salesName || "غير محدد"}</span>
-                  </div>
+                    <div className={styles.detailItem}>
+                      <span className={styles.detailLabel}>المندوب:</span>
+                      <span className={styles.detailValue}>
+                        {action.salesName || "غير محدد"}
+                      </span>
+                    </div>
                   )}
 
                   {action.project_id && (
                     <div className={styles.detailItem}>
                       <span className={styles.detailLabel}>المشروع:</span>
-                      <span className={styles.detailValue}>{action.projectName || "غير محدد"}</span>
+                      <span className={styles.detailValue}>
+                        {action.projectName || "غير محدد"}
+                      </span>
                     </div>
                   )}
 
                   {action.unit_id && (
                     <div className={styles.detailItem}>
                       <span className={styles.detailLabel}>الوحدة:</span>
-                      <span className={styles.detailValue}>{action.unitName || "غير محدد"}</span>
+                      <span className={styles.detailValue}>
+                        {action.unitName || "غير محدد"}
+                      </span>
                     </div>
                   )}
 
@@ -612,8 +698,14 @@ const openCreateModal = () => {
           {filteredActions.map((action) => (
             <div key={action.id} className={styles.actionListItem}>
               <div className={styles.actionListHeader}>
-                <div className={styles.actionDate}>{formatDate(action.created_at.toString())}</div>
-                <button className={styles.infoButton} onClick={() => openInfoModal(action)} aria-label="معلومات">
+                <div className={styles.actionDate}>
+                  {formatDate(action.created_at.toString())}
+                </div>
+                <button
+                  className={styles.infoButton}
+                  onClick={() => openInfoModal(action)}
+                  aria-label="معلومات"
+                >
                   <Info size={18} />
                 </button>
               </div>
@@ -621,20 +713,34 @@ const openCreateModal = () => {
               <div className={styles.actionListContent}>
                 <div className={styles.actionStatusFlow}>
                   <div className={styles.stateBox}>
-                    <span className={styles.stateName}>{stateTranslations[action.prev_state || "NEW"]}</span>
+                    <span className={styles.stateName}>
+                      {stateTranslations[action.prev_state || "NEW"]}
+                    </span>
                     {action.prev_substate && (
-                      <span className={styles.substateName}>{substateTranslations[action.prev_substate]}</span>
+                      <span className={styles.substateName}>
+                        {substateTranslations[action.prev_substate]}
+                      </span>
                     )}
                   </div>
 
                   <ArrowRight className={styles.arrowIcon} size={20} />
 
                   <div
-                    className={`${styles.stateBox} ${action.new_state === "CLOSED_WON" ? styles.successState : action.new_state === "CLOSED_LOST" ? styles.dangerState : styles.activeState}`}
+                    className={`${styles.stateBox} ${
+                      action.new_state === "CLOSED_WON"
+                        ? styles.successState
+                        : action.new_state === "CLOSED_LOST"
+                        ? styles.dangerState
+                        : styles.activeState
+                    }`}
                   >
-                    <span className={styles.stateName}>{stateTranslations[action.new_state || "NEW"]}</span>
+                    <span className={styles.stateName}>
+                      {stateTranslations[action.new_state || "NEW"]}
+                    </span>
                     {action.new_substate && (
-                      <span className={styles.substateName}>{substateTranslations[action.new_substate]}</span>
+                      <span className={styles.substateName}>
+                        {substateTranslations[action.new_substate]}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -642,23 +748,29 @@ const openCreateModal = () => {
                 <div className={styles.actionListDetails}>
                   <div className={styles.detailsRow}>
                     {isAdmin && (
-                    <div className={styles.detailItem}>
-                      <span className={styles.detailLabel}>المندوب:</span>
-                      <span className={styles.detailValue}>{action.salesName || "غير محدد"}</span>
-                    </div>
+                      <div className={styles.detailItem}>
+                        <span className={styles.detailLabel}>المندوب:</span>
+                        <span className={styles.detailValue}>
+                          {action.salesName || "غير محدد"}
+                        </span>
+                      </div>
                     )}
 
                     {action.project_id && (
                       <div className={styles.detailItem}>
                         <span className={styles.detailLabel}>المشروع:</span>
-                        <span className={styles.detailValue}>{action.projectName || "غير محدد"}</span>
+                        <span className={styles.detailValue}>
+                          {action.projectName || "غير محدد"}
+                        </span>
                       </div>
                     )}
 
                     {action.unit_id && (
                       <div className={styles.detailItem}>
                         <span className={styles.detailLabel}>الوحدة:</span>
-                        <span className={styles.detailValue}>{action.unitName || "غير محدد"}</span>
+                        <span className={styles.detailValue}>
+                          {action.unitName || "غير محدد"}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -694,45 +806,66 @@ const openCreateModal = () => {
                   <span className={styles.infoLabel}>رقم الإجراء:</span>
                   <span className={styles.infoValue}>{selectedAction.id}</span>
                 </div>
-                {isAdmin&&(<>
-                
-                <div className={styles.infoItem}>
-                  <span className={styles.infoLabel}>العميل:</span>
-                  <span className={styles.infoValue}>{selectedAction.leadName || "غير محدد"}</span>
-                </div>
-                <div className={styles.infoItem}>
-                  <span className={styles.infoLabel}>المندوب:</span>
-                  <span className={styles.infoValue}>{selectedAction.salesName || "غير محدد"}</span>
-                </div>
-                </>)}
+                {isAdmin && (
+                  <>
+                    <div className={styles.infoItem}>
+                      <span className={styles.infoLabel}>العميل:</span>
+                      <span className={styles.infoValue}>
+                        {selectedAction.leadName || "غير محدد"}
+                      </span>
+                    </div>
+                    <div className={styles.infoItem}>
+                      <span className={styles.infoLabel}>المندوب:</span>
+                      <span className={styles.infoValue}>
+                        {selectedAction.salesName || "غير محدد"}
+                      </span>
+                    </div>
+                  </>
+                )}
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>تاريخ الإنشاء:</span>
-                  <span className={styles.infoValue}>{formatDate(selectedAction.created_at.toString())}</span>
+                  <span className={styles.infoValue}>
+                    {formatDate(selectedAction.created_at.toString())}
+                  </span>
                 </div>
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>آخر تحديث:</span>
-                  <span className={styles.infoValue}>{formatDate(selectedAction.updated_at.toString())}</span>
+                  <span className={styles.infoValue}>
+                    {formatDate(selectedAction.updated_at.toString())}
+                  </span>
                 </div>
               </div>
 
               <div className={styles.infoSection}>
                 <h3>تغيير الحالة</h3>
                 <div className={styles.stateChangeInfo}>
-                  <div className={`${styles.stateInfoBox} ${styles.prevStateBox}`}>
+                  <div
+                    className={`${styles.stateInfoBox} ${styles.prevStateBox}`}
+                  >
                     <h4>الحالة السابقة</h4>
-                    <span className={styles.stateName}>{stateTranslations[selectedAction.prev_state || "NEW"]}</span>
+                    <span className={styles.stateName}>
+                      {stateTranslations[selectedAction.prev_state || "NEW"]}
+                    </span>
                     {selectedAction.prev_substate && (
-                      <span className={styles.substateName}>{substateTranslations[selectedAction.prev_substate]}</span>
+                      <span className={styles.substateName}>
+                        {substateTranslations[selectedAction.prev_substate]}
+                      </span>
                     )}
                   </div>
 
                   <ArrowRight className={styles.arrowIconLarge} size={32} />
 
-                  <div className={`${styles.stateInfoBox} ${styles.newStateBox}`}>
+                  <div
+                    className={`${styles.stateInfoBox} ${styles.newStateBox}`}
+                  >
                     <h4>الحالة الجديدة</h4>
-                    <span className={styles.stateName}>{stateTranslations[selectedAction.new_state || "NEW"]}</span>
+                    <span className={styles.stateName}>
+                      {stateTranslations[selectedAction.new_state || "NEW"]}
+                    </span>
                     {selectedAction.new_substate && (
-                      <span className={styles.substateName}>{substateTranslations[selectedAction.new_substate]}</span>
+                      <span className={styles.substateName}>
+                        {substateTranslations[selectedAction.new_substate]}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -744,13 +877,17 @@ const openCreateModal = () => {
                   {selectedAction.project_id && (
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>المشروع:</span>
-                      <span className={styles.infoValue}>{selectedAction.projectName || "غير محدد"}</span>
+                      <span className={styles.infoValue}>
+                        {selectedAction.projectName || "غير محدد"}
+                      </span>
                     </div>
                   )}
                   {selectedAction.unit_id && (
                     <div className={styles.infoItem}>
                       <span className={styles.infoLabel}>الوحدة:</span>
-                      <span className={styles.infoValue}>{selectedAction.unitName || "غير محدد"}</span>
+                      <span className={styles.infoValue}>
+                        {selectedAction.unitName || "غير محدد"}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -790,7 +927,11 @@ const openCreateModal = () => {
                 <div className={styles.stateChangeForm}>
                   <div className={styles.stateFormGroup}>
                     <label>الحالة السابقة</label>
-                    <select value={newAction.prevState} className={styles.stateSelect} disabled={true}>
+                    <select
+                      value={newAction.prevState}
+                      className={styles.stateSelect}
+                      disabled={true}
+                    >
                       {Object.keys(stateTranslations).map((state) => (
                         <option key={state} value={state}>
                           {stateTranslations[state]}
@@ -801,13 +942,19 @@ const openCreateModal = () => {
                     {stateToSubstate[newAction.prevState]?.length > 0 && (
                       <div className={styles.substateGroup}>
                         <label>الحالة الفرعية السابقة</label>
-                        <select value={newAction.prevSubstate} className={styles.substateSelect} disabled={true}>
+                        <select
+                          value={newAction.prevSubstate}
+                          className={styles.substateSelect}
+                          disabled={true}
+                        >
                           <option value="">بدون حالة فرعية</option>
-                          {stateToSubstate[newAction.prevState].map((substate) => (
-                            <option key={substate} value={substate}>
-                              {substateTranslations[substate]}
-                            </option>
-                          ))}
+                          {stateToSubstate[newAction.prevState].map(
+                            (substate) => (
+                              <option key={substate} value={substate}>
+                                {substateTranslations[substate]}
+                              </option>
+                            )
+                          )}
                         </select>
                       </div>
                     )}
@@ -835,15 +982,22 @@ const openCreateModal = () => {
                         <label>الحالة الفرعية الجديدة</label>
                         <select
                           value={newAction.newSubstate}
-                          onChange={(e) => setNewAction((prev) => ({ ...prev, newSubstate: e.target.value }))}
+                          onChange={(e) =>
+                            setNewAction((prev) => ({
+                              ...prev,
+                              newSubstate: e.target.value,
+                            }))
+                          }
                           className={styles.substateSelect}
                         >
                           <option value="">بدون حالة فرعية</option>
-                          {stateToSubstate[newAction.newState].map((substate) => (
-                            <option key={substate} value={substate}>
-                              {substateTranslations[substate]}
-                            </option>
-                          ))}
+                          {stateToSubstate[newAction.newState].map(
+                            (substate) => (
+                              <option key={substate} value={substate}>
+                                {substateTranslations[substate]}
+                              </option>
+                            )
+                          )}
                         </select>
                       </div>
                     )}
@@ -858,12 +1012,19 @@ const openCreateModal = () => {
                   <h3>معلومات العقار</h3>
                   <div className={styles.formGroup}>
                     <label htmlFor="projectId">
-                      المشروع {newAction.newState === "CLOSED_WON" && <span className={styles.requiredMark}>*</span>}
+                      المشروع{" "}
+                      {newAction.newState === "CLOSED_WON" && (
+                        <span className={styles.requiredMark}>*</span>
+                      )}
                     </label>
                     <select
                       id="projectId"
                       value={newAction.projectId || ""}
-                      onChange={(e) => handleProjectChange(e.target.value ? Number.parseInt(e.target.value) : 0)}
+                      onChange={(e) =>
+                        handleProjectChange(
+                          e.target.value ? Number.parseInt(e.target.value) : 0
+                        )
+                      }
                       className={styles.formInput}
                       required={newAction.newState === "CLOSED_WON"}
                     >
@@ -879,7 +1040,10 @@ const openCreateModal = () => {
                   {newAction.projectId && (
                     <div className={styles.formGroup}>
                       <label htmlFor="unitId">
-                        الوحدة {newAction.newState === "CLOSED_WON" && <span className={styles.requiredMark}>*</span>}
+                        الوحدة{" "}
+                        {newAction.newState === "CLOSED_WON" && (
+                          <span className={styles.requiredMark}>*</span>
+                        )}
                       </label>
                       <select
                         id="unitId"
@@ -887,7 +1051,9 @@ const openCreateModal = () => {
                         onChange={(e) =>
                           setNewAction((prev) => ({
                             ...prev,
-                            unitId: e.target.value ? Number.parseInt(e.target.value) : null,
+                            unitId: e.target.value
+                              ? Number.parseInt(e.target.value)
+                              : null,
                           }))
                         }
                         className={styles.formInput}
@@ -918,7 +1084,12 @@ const openCreateModal = () => {
                   <textarea
                     id="notes"
                     value={newAction.notes}
-                    onChange={(e) => setNewAction((prev) => ({ ...prev, notes: e.target.value }))}
+                    onChange={(e) =>
+                      setNewAction((prev) => ({
+                        ...prev,
+                        notes: e.target.value,
+                      }))
+                    }
                     className={styles.formTextarea}
                     rows={4}
                   />
@@ -926,11 +1097,24 @@ const openCreateModal = () => {
               </div>
 
               <div className={styles.modalFooter}>
-                <button type="button" className={styles.cancelButton} onClick={closeModals} disabled={isCreatingAction}>
+                <button
+                  type="button"
+                  className={styles.cancelButton}
+                  onClick={closeModals}
+                  disabled={isCreatingAction}
+                >
                   إلغاء
                 </button>
-                <button type="submit" className={styles.submitButton} disabled={isCreatingAction}>
-                  {isCreatingAction || isLoadingActions ? <Loading isVisible={true} /> : "إضافة إجراء"}
+                <button
+                  type="submit"
+                  className={styles.submitButton}
+                  disabled={isCreatingAction}
+                >
+                  {isCreatingAction || isLoadingActions ? (
+                    <Loading isVisible={true} />
+                  ) : (
+                    "إضافة إجراء"
+                  )}
                 </button>
               </div>
             </form>
@@ -944,7 +1128,10 @@ const openCreateModal = () => {
           <div className={styles.modal}>
             <div className={styles.modalHeader}>
               <h2>جدولة مهمة</h2>
-              <button className={styles.closeButton} onClick={() => setIsTaskModalOpen(false)}>
+              <button
+                className={styles.closeButton}
+                onClick={() => setIsTaskModalOpen(false)}
+              >
                 <X size={20} />
               </button>
             </div>
@@ -957,7 +1144,9 @@ const openCreateModal = () => {
                     id="taskName"
                     type="text"
                     value={taskForm.name}
-                    onChange={(e) => setTaskForm((prev) => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) =>
+                      setTaskForm((prev) => ({ ...prev, name: e.target.value }))
+                    }
                     className={styles.formInput}
                     required
                   />
@@ -969,9 +1158,15 @@ const openCreateModal = () => {
                     id="taskDate"
                     type="date"
                     value={taskForm.dueDate}
-                    onChange={(e) => setTaskForm((prev) => ({ ...prev, dueDate: e.target.value }))}
+                    onChange={(e) =>
+                      setTaskForm((prev) => ({
+                        ...prev,
+                        dueDate: e.target.value,
+                      }))
+                    }
                     className={styles.formInput}
                     required
+                    min={new Date().toISOString().split("T")[0]}
                   />
                 </div>
 
@@ -981,7 +1176,12 @@ const openCreateModal = () => {
                     id="taskTime"
                     type="time"
                     value={taskForm.dueTime}
-                    onChange={(e) => setTaskForm((prev) => ({ ...prev, dueTime: e.target.value }))}
+                    onChange={(e) =>
+                      setTaskForm((prev) => ({
+                        ...prev,
+                        dueTime: e.target.value,
+                      }))
+                    }
                     className={styles.formInput}
                     required
                   />
@@ -989,7 +1189,11 @@ const openCreateModal = () => {
               </div>
 
               <div className={styles.modalFooter}>
-                <button type="button" className={styles.cancelButton} onClick={() => setIsTaskModalOpen(false)}>
+                <button
+                  type="button"
+                  className={styles.cancelButton}
+                  onClick={() => setIsTaskModalOpen(false)}
+                >
                   إلغاء
                 </button>
                 <button type="submit" className={styles.submitButton}>
@@ -1001,7 +1205,7 @@ const openCreateModal = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default LeadActions
+export default LeadActions;

@@ -36,7 +36,9 @@ const ProjectsPage: React.FC = () => {
   const [isImageGalleryOpen, setIsImageGalleryOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [viewMode, setViewMode] = useState<"cards" | "list">("cards")
+  const apiUrlBase = import.meta.env.VITE_IMG_BASE_URL; 
 
+  
   // Form state for create/edit
   const [name, setName] = useState("")
   const [location, setLocation] = useState("")
@@ -610,7 +612,7 @@ const ProjectsPage: React.FC = () => {
                     {existingImages.map((imageUrl, index) => (
                       <div key={index} className={styles.imageContainer}>
                         <img
-                          src={`http://localhost:3001${imageUrl}`}
+                          src={`${apiUrlBase}${imageUrl}`}
                           alt={`صورة ${index + 1}`}
                           className={styles.imagePreview}
                         />
@@ -707,10 +709,10 @@ const ProjectsPage: React.FC = () => {
                   {getImageUrls(selectedProject.pics).map((imageUrl, index) => (
                     <div key={index} className={styles.galleryImageContainer}>
                       <img
-                        src={`http://localhost:3001${imageUrl}`}
+                        src={`${apiUrlBase}${imageUrl}`}
                         alt={`صورة ${index + 1}`}
                         className={styles.galleryImage}
-                        onClick={() => window.open(`http://localhost:3001${imageUrl}`, "_blank")}
+                        onClick={() => window.open(`${apiUrlBase}${imageUrl}`, "_blank")}
                       />
                     </div>
                   ))}
