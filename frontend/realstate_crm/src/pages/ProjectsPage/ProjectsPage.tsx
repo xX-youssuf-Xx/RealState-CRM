@@ -36,7 +36,8 @@ const ProjectsPage: React.FC = () => {
   const [isImageGalleryOpen, setIsImageGalleryOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [viewMode, setViewMode] = useState<"cards" | "list">("cards")
-  const apiUrlBase = import.meta.env.VITE_IMG_BASE_URL; 
+  // const apiUrlBase = import.meta.env.VITE_IMG_BASE_URL; 
+  const apiUrlBase = 'https://amaar.egypt-tech.com'; 
 
   
   // Form state for create/edit
