@@ -1,0 +1,1 @@
+import{c as u,r as l}from"./index-DQLDsJ8x.js";const i=()=>{const{isLoading:a,error:s,data:o,setError:e,_execute:r}=u(),c=l.useCallback(async(n={})=>{try{return await r("employees","GET",null,n)}catch(t){throw e(t),t}},[r,e]);return{isLoading:a,error:s,data:o,execute:c,setError:e}};export{i as u};
