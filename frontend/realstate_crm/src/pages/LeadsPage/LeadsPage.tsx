@@ -2,12 +2,13 @@
 
 import type React from "react"
 import { useState, useEffect, useMemo } from "react"
+import { useSearchParams } from "react-router-dom"
 import { Edit, Trash2, Plus, X, Search, Info, Phone, Filter, UserPlus, ExternalLink, Grid, List } from "lucide-react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useGetAllLeads, type Lead } from "../../hooks/Leads/useGetAllLeads"
 import { useCreateLead } from "../../hooks/Leads/useCreateLead"
-import { useUpdateLead } from "../../hooks/Leads/useUpdateLead"
+import { useUpdateLead, getChangedFields } from "../../hooks/Leads/useUpdateLead"
 import { useDeleteLead } from "../../hooks/Leads/useDeleteLead"
 import { useGetLeadBySalesId } from "../../hooks/Leads/useGetLeadBySalesId"
 import { useTransferLead } from "../../hooks/Leads/useTransferLead"
@@ -16,6 +17,11 @@ import { useGetEmployee } from "../../hooks/Employees/useGetEmployee"
 import { useAuth } from "../../contexts/auth"
 import styles from "./LeadsPage.module.css"
 import Loading from "../../components/Loading/Loading"
+
+interface LeadWithSalesName extends Lead {
+  salesName?: string;
+  // No need to add campaign here as it's already in Lead
+}
 
 // Lead state translations
 const stateTranslations: Record<string, string> = {
@@ -142,6 +148,7 @@ interface LeadFormData {
   budget: number | null
   notes: string | null
   notification_id: string | null
+  campaign ?: string 
 }
 
 interface FilterOptions {
@@ -179,6 +186,8 @@ const initialFilterOptions: FilterOptions = {
 }
 
 const LeadsPage: React.FC = () => {
+  const [searchParams] = useSearchParams()
+  const employeeId = searchParams.get('employeeId')
   const [leads, setLeads] = useState<LeadWithSalesName[]>([])
   const [employees, setEmployees] = useState<Employee[]>([])
   const [searchQuery, setSearchQuery] = useState("")
@@ -205,17 +214,17 @@ const LeadsPage: React.FC = () => {
   const { execute: deleteLead, isLoading: isDeleting } = useDeleteLead()
   const { execute: transferLead, isLoading: isTransferring } = useTransferLead()
 
-  // Fetch leads and employees on component mount
   useEffect(() => {
-    loadEmployees()
+    loadEmployees(  )
 
-    // Load leads based on user role
-    if (employee?.role === "ADMIN") {
+    if (employeeId) {
+      loadLeadsBySalesId(Number.parseInt(employeeId))
+    } else if (employee?.role === "ADMIN" || employee?.role === "MANAGER") {
       loadLeads()
     } else if (employee?.role === "SALES" && employee?.id) {
       loadLeadsBySalesId(Number.parseInt(employee.id))
     }
-  }, [employee])
+  }, [employee, employeeId])
 
   // Load all leads (for admin)
   const loadLeads = async () => {
@@ -498,30 +507,33 @@ const LeadsPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
+  
     try {
       if (selectedLead) {
-        // Update existing lead
-        await updateLead(
-          Number(selectedLead.id),
-          formData.name,
-          formData.number,
-          formData.source,
-          formData.address,
-          formData.state,
-          formData.substate || undefined,
-          selectedLead.sales_id,
-          formData.budget,
-          formData.notes,
-          selectedLead.is_created_by_sales,
-          formData.notification_id,
-        )
+        // Create an object with the current form data
+        const updatedData = {
+          name: formData.name,
+          number: formData.number,
+          source: formData.source,
+          address: formData.address,
+          state: formData.state,
+          substate: formData.substate || undefined,
+          budget: formData.budget,
+          notes: formData.notes,
+          notification_id: formData.notification_id,
+          campaign: formData.campaign
+        }
+        
+        // Get only the changed fields by comparing with the original lead data
+        const changedFields = getChangedFields(selectedLead, updatedData)
+        
+        // Update the lead with only the changed fields
+        await updateLead(Number(selectedLead.id), changedFields)
         toast.success("تم تحديث بيانات العميل بنجاح")
       } else {
-        // Create new lead
+        // Create new lead (no changes needed for creation)
         const isCreatedBySales = employee?.role.toUpperCase() === "SALES"
-        // const salesId = isCreatedBySales ? Number(employee.id) : null
-
+  
         await createLead(
           formData.name,
           formData.number,
@@ -533,12 +545,13 @@ const LeadsPage: React.FC = () => {
           formData.notes,
           isCreatedBySales,
           formData.notification_id,
+          formData.campaign || null, 
         )
         toast.success("تم إضافة العميل بنجاح")
       }
-
+  
       closeModal()
-
+  
       // Reload leads based on user role
       if (employee?.role === "ADMIN") {
         loadLeads()
@@ -606,7 +619,7 @@ const LeadsPage: React.FC = () => {
 
   // Get CSS class based on lead state
   const getLeadCardClass = (state: string) => {
-    const upperState = state.toUpperCase()
+    const upperState = state?.toUpperCase()
     if (upperState === "NEW") {
       return `${styles.leadCard} ${styles.newLead}`
     } else if (upperState === "CONTACTED" || upperState === "FOLLOW_UP") {
@@ -723,7 +736,7 @@ const LeadsPage: React.FC = () => {
             <div className={styles.leadsGrid}>
               {filteredAndSortedLeads.map((lead) => (
                 <div key={lead.id} className={getLeadCardClass(lead.state)}>
-                  <div className={`${styles.leadHeader} ${styles[lead.state.toLowerCase() + "Header"]}`}>
+                  <div className={`${styles.leadHeader} ${styles[lead.state?.toLowerCase() + "Header"]}`}>
                     <h3 className={styles.leadName}>{lead.name}</h3>
                     <div className={styles.actions}>
                       <button className={styles.infoButton} onClick={() => openInfoModal(lead)} aria-label="معلومات">
@@ -836,7 +849,7 @@ const LeadsPage: React.FC = () => {
                       </div>
                       <div className={styles.detailItem}>
                         <span className={styles.detailLabel}>الحالة:</span>
-                        <span className={`${styles.detailValue} ${styles[lead.state.toLowerCase() + "State"]}`}>
+                        <span className={`${styles.detailValue} ${styles[lead.state?.toLowerCase() + "State"]}`}>
                           {stateTranslations[lead.state] || lead.state}
                         </span>
                       </div>
@@ -900,7 +913,7 @@ const LeadsPage: React.FC = () => {
               <div className={styles.formGroup}>
                 <label htmlFor="number">رقم الهاتف</label>
                 <input
-                  type="number"
+                  type="text"
                   id="number"
                   name="number"
                   value={formData.number}
@@ -922,6 +935,18 @@ const LeadsPage: React.FC = () => {
               </div>
 
               <div className={styles.formGroup}>
+                <label htmlFor="campaign">الcampaign</label>
+                <input
+                  type="text"
+                  id="campaign"
+                  name="campaign"
+                  value={formData.campaign}
+                  onChange={handleInputChange}
+                  placeholder="أدخل الcampaign "
+                  />
+              </div>
+
+              <div className={styles.formGroup}>
                 <label htmlFor="address">العنوان</label>
                 <input
                   type="text"
@@ -929,8 +954,8 @@ const LeadsPage: React.FC = () => {
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
-                  required
                   placeholder="أدخل العنوان"
+                  required
                 />
               </div>
 
@@ -1016,7 +1041,7 @@ const LeadsPage: React.FC = () => {
       {isInfoModalOpen && selectedLead && (
         <div className={styles.modalOverlay}>
           <div className={styles.infoModal}>
-            <div className={`${styles.modalHeader} ${styles[selectedLead.state.toLowerCase() + "Header"]}`}>
+            <div className={`${styles.modalHeader} ${styles[selectedLead.state?.toLowerCase() + "Header"]}`}>
               <h2>معلومات العميل</h2>
               <button className={styles.closeButton} onClick={closeModal}>
                 <X size={20} />
@@ -1064,7 +1089,7 @@ const LeadsPage: React.FC = () => {
                 <h3 className={styles.sectionTitle}>حالة العميل</h3>
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>الحالة:</span>
-                  <span className={`${styles.infoValue} ${styles[selectedLead.state.toLowerCase() + "State"]}`}>
+                  <span className={`${styles.infoValue} ${styles[selectedLead.state?.toLowerCase() + "State"]}`}>
                     {stateTranslations[selectedLead.state] || selectedLead.state}
                   </span>
                 </div>

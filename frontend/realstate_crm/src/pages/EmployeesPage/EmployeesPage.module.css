@@ -635,3 +635,128 @@
     width: 100%;
   }
 }
+
+.viewLeadsButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #0a2351;
+  color: white;
+  border: none;
+  border-radius: 0;
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: auto;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.viewLeadsButton:hover {
+  background-color: #0d2b63;
+}
+
+.adminEmployee .viewLeadsButton {
+  background-color: #d4af37;
+  color: #0a2351;
+}
+
+.adminEmployee .viewLeadsButton:hover {
+  background-color: #f5cc50;
+}
+
+.managerEmployee .viewLeadsButton {
+  background-color: #2e7d32;
+}
+
+.managerEmployee .viewLeadsButton:hover {
+  background-color: #1b5e20;
+}
+
+.listViewLeadsButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #0a2351;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 1rem;
+}
+
+.listViewLeadsButton:hover {
+  background-color: #0d2b63;
+}
+
+.adminListItem .listViewLeadsButton {
+  background-color: #d4af37;
+  color: #0a2351;
+}
+
+.adminListItem .listViewLeadsButton:hover {
+  background-color: #f5cc50;
+}
+
+.managerListItem .listViewLeadsButton {
+  background-color: #2e7d32;
+}
+
+.managerListItem .listViewLeadsButton:hover {
+  background-color: #1b5e20;
+}
+
+.reportButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.reportButton:hover {
+  background-color: #45a049;
+}
+
+.reportButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.select[multiple] {
+  height: 120px;
+}
+
+.select option {
+  padding: 8px;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  margin-top: 4px;
+}

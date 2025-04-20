@@ -2,15 +2,19 @@
 
 import type React from "react"
 import { useState, useEffect, useMemo } from "react"
-import { Edit, Trash2, Plus, X, Search, Info, Grid, List } from "lucide-react"
+import { Edit, Trash2, Plus, X, Search, Info, Grid, List, UserCheck, FileText } from "lucide-react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useGetAllEmployees, type Employee } from "../../hooks/Employees/useGetAllEmployees"
 import { useCreateEmployee } from "../../hooks/Employees/useCreateEmployee"
 import { useUpdateEmployee } from "../../hooks/Employees/useUpdateEmployee"
 import { useDeleteEmployee } from "../../hooks/Employees/useDeleteEmployee"
+import { useGetAllLeads } from "../../hooks/Leads/useGetAllLeads"
+import { useGetActionsByCustomerId } from "../../hooks/Actions/useGetActionsByCustomerId"
+import { generateSalesReport } from "../../utils/excelExport"
 import styles from "./EmployeesPage.module.css"
 import Loading from "../../components/Loading/Loading"
+import { useNavigate } from "react-router-dom"
 
 // Role translation mapping
 const roleTranslations: Record<string, string> = {
@@ -48,6 +52,14 @@ interface EmployeeFormData {
   password: string
 }
 
+interface ReportFormData {
+  selectedSalesIds: number[] | null;
+  selectedLeadIds: number[] | null;
+  selectedStates: string[] | null;
+  startDate: string | null;
+  endDate: string | null;
+}
+
 const initialFormData: EmployeeFormData = {
   name: "",
   number: "",
@@ -56,7 +68,16 @@ const initialFormData: EmployeeFormData = {
   password: "",
 }
 
+const initialReportFormData: ReportFormData = {
+  selectedSalesIds: null,
+  selectedLeadIds: null,
+  selectedStates: null,
+  startDate: null,
+  endDate: null,
+}
+
 const EmployeesPage: React.FC = () => {
+  const navigate = useNavigate()
   const [employees, setEmployees] = useState<Employee[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -65,11 +86,16 @@ const EmployeesPage: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null)
   const [formData, setFormData] = useState<EmployeeFormData>(initialFormData)
   const [viewMode, setViewMode] = useState<"cards" | "list">("cards")
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+  const [reportFormData, setReportFormData] = useState<ReportFormData>(initialReportFormData)
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false)
 
   const { execute: fetchEmployees, isLoading: isLoadingEmployees } = useGetAllEmployees()
   const { execute: createEmployee, isLoading: isCreating } = useCreateEmployee()
   const { execute: updateEmployee, isLoading: isUpdating } = useUpdateEmployee()
   const { execute: deleteEmployee, isLoading: isDeleting } = useDeleteEmployee()
+  const { execute: fetchLeads } = useGetAllLeads()
+  const { execute: fetchActions } = useGetActionsByCustomerId()
 
   // Fetch employees on component mount
   useEffect(() => {
@@ -86,7 +112,7 @@ const EmployeesPage: React.FC = () => {
   }
 
   // Filter and sort employees
-  const filteredAndSortedEmployees = useMemo(() => {
+  const filteredAndSortedEmployees = useMemo(() => { 
     // First filter by search query
     const filtered = employees.filter((employee) => employee.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
@@ -229,6 +255,58 @@ const EmployeesPage: React.FC = () => {
     return styles.employeeListItem
   }
 
+  const handleViewLeads = (employeeId: string) => {
+    navigate(`/leads?employeeId=${employeeId}`)
+  }
+
+  const handleReportSubmit = async () => {
+    try {
+      setIsGeneratingReport(true)
+      
+      // Fetch all leads and actions
+      const allLeads = await fetchLeads()
+      const allActions = await Promise.all(
+        allLeads.map(lead => fetchActions(lead.id))
+      ).then(actions => actions.flat())
+
+      // Generate the report
+      generateSalesReport({
+        employees,
+        leads: allLeads,
+        actions: allActions,
+        ...reportFormData
+      })
+
+      toast.success("تم إنشاء التقرير بنجاح")
+      setIsReportModalOpen(false)
+    } catch (error: any) {
+      toast.error(error.message || "حدث خطأ أثناء إنشاء التقرير")
+    } finally {
+      setIsGeneratingReport(false)
+    }
+  }
+
+  const handleReportInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setReportFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSalesSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = e.target.value ? Number(e.target.value) : null;
+    setReportFormData(prev => ({
+      ...prev,
+      selectedSalesIds: selectedId ? [selectedId] : null
+    }));
+  };
+
+  const handleStatesSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedState = e.target.value || null;
+    setReportFormData(prev => ({
+      ...prev,
+      selectedStates: selectedState ? [selectedState] : null
+    }));
+  };
+
   return (
     <div className={styles.employeesPage}>
       <div className={styles.header}>
@@ -260,6 +338,10 @@ const EmployeesPage: React.FC = () => {
               <List size={18} />
             </button>
           </div>
+          <button className={styles.reportButton} onClick={() => setIsReportModalOpen(true)}>
+            <FileText size={18} />
+            <span>تقرير</span>
+          </button>
           <button className={styles.addButton} onClick={openCreateModal} disabled={isLoadingEmployees}>
             <Plus size={18} />
             <span>إضافة موظف</span>
@@ -323,6 +405,15 @@ const EmployeesPage: React.FC = () => {
                   <span className={styles.detailValue}>{formatDate(employee.created_at.toString())}</span>
                 </div>
               </div>
+
+              <button 
+                className={styles.viewLeadsButton} 
+                onClick={() => handleViewLeads(employee.id.toString())}
+                aria-label="عرض العملاء المحتملين"
+              >
+                <UserCheck size={16} />
+                <span>عرض العملاء</span>
+              </button>
             </div>
           ))}
         </div>
@@ -367,6 +458,15 @@ const EmployeesPage: React.FC = () => {
                     <span className={styles.detailValue}>{formatDate(employee.created_at.toString())}</span>
                   </div>
                 </div>
+                
+                <button 
+                  className={styles.listViewLeadsButton}
+                  onClick={() => handleViewLeads(employee.id.toString())}
+                  aria-label="عرض العملاء المحتملين"
+                >
+                  <UserCheck size={16} />
+                  <span>عرض العملاء</span>
+                </button>
               </div>
             </div>
           ))}
@@ -552,6 +652,113 @@ const EmployeesPage: React.FC = () => {
                 )}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Report Modal */}
+      {isReportModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <h2>تقرير المبيعات</h2>
+              <button className={styles.closeButton} onClick={() => setIsReportModalOpen(false)}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <form className={styles.form}>
+              <div className={styles.formGroup}>
+                <label htmlFor="selectedSalesIds">اختر الموظفين</label>
+                <select
+                  id="selectedSalesIds"
+                  name="selectedSalesIds"
+                  onChange={handleSalesSelect}
+                  className={styles.select}
+                >
+                  <option value="">الكل</option>
+                  {employees
+                    .filter(emp => emp.role === 'SALES' || emp.role === 'MANAGER')
+                    .map(emp => (
+                      <option key={emp.id} value={emp.id}>
+                        {emp.name}
+                      </option>
+                    ))}
+                </select>
+                <small>اختر موظف محدد أو الكل</small>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="selectedStates">حالة العملاء</label>
+                <select
+                  id="selectedStates"
+                  name="selectedStates"
+                  onChange={handleStatesSelect}
+                  className={styles.select}
+                >
+                  <option value="">الكل</option>
+                  <option value="NEW">جديد</option>
+                  <option value="CONTACTED">تم التواصل</option>
+                  <option value="INTERESTED">مهتم</option>
+                  <option value="VISITING">زيارة</option>
+                  <option value="MEETING">اجتماع</option>
+                  <option value="NEGOTIATING">تفاوض</option>
+                  <option value="QUALIFIED">مؤهل</option>
+                  <option value="CLOSED_WON">تم الإغلاق (نجاح)</option>
+                  <option value="CLOSED_LOST">تم الإغلاق (خسارة)</option>
+                  <option value="FOLLOW_UP">متابعة</option>
+                </select>
+                <small>اختر حالة محددة أو الكل</small>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="startDate">من تاريخ</label>
+                <input
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                  onChange={handleReportInputChange}
+                  className={styles.input}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="endDate">إلى تاريخ</label>
+                <input
+                  type="date"
+                  id="endDate"
+                  name="endDate"
+                  onChange={handleReportInputChange}
+                  className={styles.input}
+                />
+              </div>
+
+              <div className={styles.formActions}>
+                <button
+                  type="button"
+                  className={styles.cancelButton}
+                  onClick={() => setIsReportModalOpen(false)}
+                  disabled={isGeneratingReport}
+                >
+                  إلغاء
+                </button>
+                <button
+                  type="button"
+                  className={styles.submitButton}
+                  onClick={handleReportSubmit}
+                  disabled={isGeneratingReport}
+                >
+                  {isGeneratingReport ? (
+                    <>
+                      <Loading isVisible={true} />
+                      <span>جاري إنشاء التقرير...</span>
+                    </>
+                  ) : (
+                    <span>إنشاء التقرير</span>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export const useApiFetch = <T>() => {
-  // const apiUrlBase = import.meta.env.VITE_API_BASE_URL; 
+  const apiUrlBase = import.meta.env.VITE_API_BASE_URL; 
   const [data, setData] = useState<T | null>(null);
 
   const [error, setError] = useState<any>(null);
@@ -52,9 +52,9 @@ export const useApiFetch = <T>() => {
           fetchOptions.headers = headers;
         }
 
-        // const response = await fetch(`${"http://localhost:3001/api"}/${url}`, fetchOptions);
-        const response = await fetch(`${"https://amaar.egypt-tech.com/api"}/${url}`, fetchOptions);
-        // const response = await fetch(`${apiUrlBase}/${url}`, fetchOptions);
+        // const response = await fetch(`${"https://amaar.egypt-tech.com/api"}/${url}`, fetchOptions);
+        // const response = await fetch(`${"https://amaar.egypt-tech.com/api"}/${url}`, fetchOptions);
+        const response = await fetch(`${apiUrlBase}/${url}`, fetchOptions);
 
         if (!response.ok) {
           const errorData = await response.json();

@@ -1,3 +1,4 @@
+// task.controller.ts
 import type { Request, Response } from 'express';
 import { TaskModel} from '../models/task.model';
 import type { Task } from '../models/task.model';
@@ -87,6 +88,26 @@ export const getTasksByActionId = async (req: Request, res: Response): Promise<v
 export const createTask = async (req: Request, res: Response): Promise<void> => {
   const taskData = req.body as CreateTaskData;
   try {
+    // Validate required fields
+    if (!taskData.name) {
+      res.status(400).json({ message: 'Task name is required' });
+      return;
+    }
+
+    // Validate date formats if provided
+    if (taskData.due_date && isNaN(Date.parse(taskData.due_date.toString()))) {
+      res.status(400).json({ message: 'Invalid due date format' });
+      return;
+    }
+    if (taskData.due_date_day_before && isNaN(Date.parse(taskData.due_date_day_before.toString()))) {
+      res.status(400).json({ message: 'Invalid day before due date format' });
+      return;
+    }
+    if (taskData.due_date_hour_before && isNaN(Date.parse(taskData.due_date_hour_before.toString()))) {
+      res.status(400).json({ message: 'Invalid hour before due date format' });
+      return;
+    }
+
     const newTask = await TaskModel.create(taskData);
     res.status(201).json(newTask);
   } catch (error) {
@@ -103,7 +124,22 @@ export const updateTask = async (req: Request, res: Response): Promise<void> => 
   }
   const id = parseInt(idParam);
   const updateData = req.body as UpdateTaskData;
+  
   try {
+    // Validate date formats if provided
+    if (updateData.due_date && isNaN(Date.parse(updateData.due_date.toString()))) {
+      res.status(400).json({ message: 'Invalid due date format' });
+      return;
+    }
+    if (updateData.due_date_day_before && isNaN(Date.parse(updateData.due_date_day_before.toString()))) {
+      res.status(400).json({ message: 'Invalid day before due date format' });
+      return;
+    }
+    if (updateData.due_date_hour_before && isNaN(Date.parse(updateData.due_date_hour_before.toString()))) {
+      res.status(400).json({ message: 'Invalid hour before due date format' });
+      return;
+    }
+
     const updatedTask = await TaskModel.update(id, updateData);
     if (updatedTask) {
       res.status(200).json(updatedTask);

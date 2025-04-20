@@ -6,6 +6,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom"
 import { Home, Users, Building2, Briefcase, Calendar, LogOut, X, ChevronRight } from "lucide-react"
 import { useAuth } from "../../contexts/auth"
 import styles from "./Sidebar.module.css"
+import NotificationManager from "../../utils/NotificationManager"
 
 // Define the structure for our links
 interface NavItem {
@@ -101,6 +102,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobileSidebarOpen, closeMobileSideb
                 </NavLink>
               </li>
             ))}
+            <li className={styles.navItem}>
+              <NotificationManager />
+            </li>
           </ul>
         </nav>
       </aside>
@@ -156,6 +160,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobileSidebarOpen, closeMobileSideb
                 </div>
               </li>
             ))}
+            
+            {/* Add notification manager to mobile sidebar */}
+            <li className={styles.mobileNavItem}>
+              <div className={styles.mobileNavLink}>
+                <NotificationManager isMobile={true} />
+                <ChevronRight size={16} className={styles.chevron} />
+              </div>
+            </li>
           </ul>
         </nav>
 

@@ -16,6 +16,7 @@ export interface Lead {
   updated_at: Date;
   is_created_by_sales: boolean | null;
   notification_id: string | null;
+  campaign: string | null; // Added new campaign field
 }
 
 export class LeadModel {
@@ -35,18 +36,29 @@ export class LeadModel {
   }
   
   static async create(lead: Omit<Lead, 'id' | 'created_at' | 'updated_at' | 'sales_id'>): Promise<Lead> {
-    const { name, number, source, address, state, substate, budget, notes, is_created_by_sales, notification_id } = lead;
-    const salesId = await getNextSalesEmployeeId(); // Auto-assign sales ID
+    const { name, number, source, address, state, substate, budget, notes, is_created_by_sales, notification_id, campaign } = lead;
+    
+    // Get next sales ID with robust error handling
+    let salesId;
+    try {
+      salesId = await getNextSalesEmployeeId();
+      if (salesId === null || salesId === undefined) {
+        throw new Error('Failed to get a valid sales employee ID');
+      }
+    } catch (error) {
+      console.error('Error assigning sales employee:', error);
+      throw new Error('Lead creation failed: Unable to assign sales employee');
+    }
 
     const result = await db.query(
-      'INSERT INTO leads (name, number, source, address, state, substate, sales_id, budget, notes, is_created_by_sales, notification_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
-      [name, number, source, address, state, substate, salesId, budget, notes, is_created_by_sales, notification_id]
+      'INSERT INTO leads (name, number, source, address, state, substate, sales_id, budget, notes, is_created_by_sales, notification_id, campaign) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
+      [name, number, source, address, state, substate, salesId, budget, notes, is_created_by_sales, notification_id, campaign]
     );
     return result.rows[0];
   }
 
   static async update(id: number, updates: Partial<Lead>): Promise<Lead | null> {
-    const { name, number, source, address, state, substate, sales_id, budget, notes, is_created_by_sales, notification_id } = updates;
+    const { name, number, source, address, state, substate, sales_id, budget, notes, is_created_by_sales, notification_id, campaign } = updates;
     const fieldsToUpdate = [];
     const values = [];
     let paramIndex = 1;
@@ -62,6 +74,7 @@ export class LeadModel {
     if (notes !== undefined) { fieldsToUpdate.push(`notes = $${paramIndex++}`); values.push(notes); }
     if (is_created_by_sales !== undefined) { fieldsToUpdate.push(`is_created_by_sales = $${paramIndex++}`); values.push(is_created_by_sales); }
     if (notification_id !== undefined) { fieldsToUpdate.push(`notification_id = $${paramIndex++}`); values.push(notification_id); }
+    if (campaign !== undefined) { fieldsToUpdate.push(`campaign = $${paramIndex++}`); values.push(campaign); }
 
     if (fieldsToUpdate.length === 0) {
       return await LeadModel.getById(id);
@@ -81,7 +94,7 @@ export class LeadModel {
   static async transfer(leadId: number, newSalesId: number): Promise<Lead | null> {
     const client = await db.begin();
     try {
-      await client.query('UPDATE leads SET sales_id = $1 WHERE id = $2', [newSalesId, leadId]);
+      await client.query('UPDATE leads SET sales_id = $1, updated_at = NOW() WHERE id = $2', [newSalesId, leadId]);
       await client.query('UPDATE actions SET sales_id = $1 WHERE customer_id = $2', [newSalesId, leadId]);
       await client.query('UPDATE tasks SET sales_id = $1 WHERE customer_id = $2', [newSalesId, leadId]);
       await db.commit(client);
@@ -91,5 +104,11 @@ export class LeadModel {
       console.error('Error transferring lead:', error);
       return null;
     }
+  }
+  
+  // New method to get leads by campaign
+  static async getByCampaign(campaign: string): Promise<Lead[]> {
+    const result = await db.query('SELECT * FROM leads WHERE campaign = $1', [campaign]);
+    return result.rows;
   }
 }

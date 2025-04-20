@@ -329,7 +329,7 @@ const DashboardPage: React.FC = () => {
     try {
       setIsCustomerLoading(true)
       const customerData = await fetchLead(customerId)
-      setSelectedCustomer(customerData)
+      setSelectedCustomer(customerData as any)
       setIsCustomerModalOpen(true)
     } catch (error) {
       console.error("Error fetching customer details:", error)

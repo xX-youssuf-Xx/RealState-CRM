@@ -675,6 +675,255 @@
   cursor: not-allowed;
 }
 
+/* Media Gallery Styles */
+.mediaSection {
+  margin-bottom: 1.5rem;
+}
+
+.mediaGallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.mediaItem {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid #eee;
+}
+
+.mediaItem:hover {
+  border-color: #d4af37;
+}
+
+.mediaImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mediaVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.videoIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 0.5rem;
+}
+
+.mediaPreviewOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+.mediaPreviewContent {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.mediaPreviewImage {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+.mediaPreviewVideo {
+  max-width: 100%;
+  max-height: 90vh;
+}
+
+.mediaPreviewClose {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.mediaPreviewNav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mediaPreviewPrev {
+  left: -60px;
+}
+
+.mediaPreviewNext {
+  right: -60px;
+}
+
+.mediaUploadSection {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 2px dashed #ddd;
+}
+
+.mediaUploadLabel {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: bold;
+}
+
+.mediaUploadInput {
+  display: none;
+}
+
+.mediaUploadButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #0a2351;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.mediaUploadButton:hover {
+  background-color: #0d2b63;
+}
+
+.mediaPreview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.mediaPreviewItem {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.mediaPreviewRemove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.mediaUploadProgress {
+  margin-top: 1rem;
+  height: 6px;
+  background-color: #eee;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mediaUploadProgressBar {
+  height: 100%;
+  background-color: #d4af37;
+  transition: width 0.3s ease;
+}
+
+.mediaUploadError {
+  color: #f44336;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Payment Info Styles */
+.paymentSection {
+  margin-bottom: 1.5rem;
+}
+
+.paymentMethod {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.paymentMethodOption {
+  flex: 1;
+  text-align: center;
+}
+
+.paymentMethodRadio {
+  display: none;
+}
+
+.paymentMethodLabel {
+  display: block;
+  padding: 0.75rem;
+  background-color: #f5f5f5;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paymentMethodRadio:checked + .paymentMethodLabel {
+  background-color: #0a2351;
+  color: white;
+  border-color: #0a2351;
+}
+
+.paymentDetails {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.filterPaymentMethod {
+  margin-top: 1rem;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   .header {
@@ -727,5 +976,27 @@
   .closeInfoButton,
   .editInfoButton {
     width: 100%;
+  }
+
+  .mediaGallery {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+
+  .mediaPreviewNav {
+    width: 30px;
+    height: 30px;
+  }
+
+  .mediaPreviewPrev {
+    left: -40px;
+  }
+
+  .mediaPreviewNext {
+    right: -40px;
+  }
+
+  .paymentMethod {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }

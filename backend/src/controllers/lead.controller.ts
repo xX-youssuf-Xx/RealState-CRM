@@ -63,8 +63,34 @@ export const getLeadsBySalesId = async (req: Request, res: Response): Promise<vo
   }
 };
 
+export const getLeadsByCampaign = async (req: Request, res: Response): Promise<void> => {
+  const campaign = req.params.campaign;
+  if (!campaign) {
+    res.status(400).json({ message: 'Campaign name is required' });
+    return;
+  }
+  
+  try {
+    const leads = await LeadModel.getByCampaign(campaign);
+    res.status(200).json(leads);
+  } catch (error) {
+    console.error(`Error fetching leads for campaign ${campaign}:`, error);
+    res.status(500).json({ message: 'Failed to fetch leads for the specified campaign' });
+  }
+};
+
 export const createLead = async (req: Request, res: Response): Promise<void> => {
   try {
+    // Validate required fields
+    const { name, number, source } = req.body;
+    if (!name || !number || !source) {
+      res.status(400).json({ 
+        message: 'Missing required fields', 
+        required: ['name', 'number', 'source'] 
+      });
+      return;
+    }
+    
     const leadData = req.body as CreateLeadData; // Explicitly type the request body
     const newLead = await LeadModel.create(leadData);
     res.status(201).json(newLead);
@@ -113,7 +139,7 @@ export const deleteLead = async (req: Request, res: Response): Promise<void> => 
   try {
     const deleted = await LeadModel.delete(id);
     if (deleted) {
-      res.status(200).json({ message: 'deleted successfully ' }); // No content for successful deletion
+      res.status(200).json({ message: 'Lead deleted successfully' });
     } else {
       res.status(404).json({ message: 'Lead not found' });
     }
@@ -156,7 +182,7 @@ export const transferLead = async (req: Request, res: Response): Promise<void> =
         lead: transferredLead,
       });
     } else {
-      res.status(404).json({ message: 'Lead not found' });
+      res.status(404).json({ message: 'Lead not found or transfer failed' });
     }
   } catch (error) {
     console.error(`Error transferring lead ${leadId}:`, error);

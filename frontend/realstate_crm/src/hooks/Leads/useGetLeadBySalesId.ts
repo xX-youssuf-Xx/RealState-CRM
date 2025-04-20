@@ -15,6 +15,7 @@ export interface Lead {
   updated_at: Date;
   is_created_by_sales: boolean | null;
   notification_id: string | null;
+  campaign: string | null;
 }
 export const useGetLeadBySalesId = () => {
   const { isLoading, error, data, setError, _execute } = useApiFetch<Lead[]>();

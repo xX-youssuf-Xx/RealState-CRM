@@ -4,11 +4,11 @@ create table projects (
     name text,
     location text,
     type text,
-    pics text,
     number_of_units int,
     created_at timestamp default now(),
     updated_at timestamp default now(),
-    number_of_sold_items INTEGER DEFAULT 0
+    number_of_sold_items INTEGER DEFAULT 0,
+    benefits TEXT
 );
 
 -- Create the units table
@@ -21,8 +21,13 @@ create table units (
     unit_notes text,
     created_at timestamp default now(),
     updated_at timestamp default now(),
-    status TEXT DEFAULT 'available',
-    sold_date TIMESTAMP WITHOUT TIME ZONE
+    status TEXT DEFAULT 'AVAILABLE', -- Assuming status can be 'AVAILABLE', 'SOLD', etc.
+    sold_date TIMESTAMP WITHOUT TIME ZONE,
+    payment_method TEXT, -- طريقة سداد
+    down_payment NUMERIC, -- مقدم
+    installment_amount NUMERIC, -- دفعة (Assuming this is the amount of each installment)
+    number_of_installments INTEGER, -- اقساط (Assuming this is the number of installments)
+    media TEXT -- صور فيديوهات (Storing paths or URLs as a comma-separated string)
 );
 CREATE INDEX idx_units_project_id ON units (project_id);
 
@@ -36,7 +41,6 @@ create table employees (
     updated_at timestamp default now(),
     notes text,
     hashedPass text
-
 );
 CREATE INDEX idx_employees_role ON employees (role);
 
@@ -66,7 +70,8 @@ create table leads (
     created_at timestamp default now(),
     updated_at timestamp default now(),
     is_created_by_sales boolean default false,
-    notification_id text
+    notification_id text,
+    campaign TEXT
 );
 CREATE INDEX idx_leads_sales_id ON leads (sales_id);
 CREATE INDEX idx_leads_source ON leads (source);
@@ -100,8 +105,23 @@ create table tasks (
     created_at timestamp default now(),
     updated_at timestamp default now(),
     action_id bigint references actions (id),
-    due_date timestamp
+    due_date timestamp,
+    due_date_day_before timestamp,
+    due_date_hour_before timestamp,
+    status_day_before text
+    status_hour_before text
+
 );
+
 CREATE INDEX idx_tasks_customer_id ON tasks (customer_id);
 CREATE INDEX idx_tasks_sales_id ON tasks (sales_id);
 CREATE INDEX idx_tasks_action_id ON tasks (action_id);
+
+-- Table for round-robin lead assignment counter
+CREATE TABLE round_robin_counter (
+    id SERIAL PRIMARY KEY,
+    counter INTEGER NOT NULL DEFAULT 0
+);
+
+-- Initialize the counter (you might want to do this once)
+INSERT INTO round_robin_counter (id) VALUES (1);
