@@ -1,4 +1,4 @@
-import{c as X,r as n,y as r,j as e,L as w}from"./index-D92RPh5s.js";import{P as H}from"./ReactToastify-DRkfWm2m.js";import{u as le,a as ie}from"./useUpdateProject-BU0xvfSB.js";import{S as ce,G as re,L as oe}from"./search-S0xTPVAL.js";import{S as U,T as $}from"./trash-2-glnfnrzC.js";import{c as de,X as R}from"./x-gOlHSJ9C.js";/**
+import{c as X,r as n,y as r,j as e,L as w}from"./index-Dw9eA6zH.js";import{P as H}from"./ReactToastify-CzGeHtdl.js";import{u as le,a as ie}from"./useUpdateProject-DxmyZkum.js";import{S as ce,G as re,L as oe}from"./search-DIF0ChIb.js";import{S as U,T as $}from"./trash-2-CJ1Ns07C.js";import{c as de,X as R}from"./x-m5D02e-r.js";/**
  * @license lucide-react v0.487.0 - ISC
  *
  * This source code is licensed under the ISC license.
