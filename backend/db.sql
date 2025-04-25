@@ -108,7 +108,7 @@ create table tasks (
     due_date timestamp,
     due_date_day_before timestamp,
     due_date_hour_before timestamp,
-    status_day_before text
+    status_day_before text,
     status_hour_before text
 
 );

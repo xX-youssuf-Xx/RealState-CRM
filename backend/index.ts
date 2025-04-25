@@ -17,6 +17,7 @@ import employeeRoutes from './src/routes/employee.routes';
 import taskRoutes from './src/routes/task.routes';
 import reportRoutes from './src/routes/report.route';
 import notificationRoutes from './src/routes/notification.routes';
+import whatsappRoutes from './src/routes/whatsapp.routes';
 
 dotenv.config();
 
@@ -50,6 +51,7 @@ app.use('/api/actions', actionRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/whatsapp', whatsappRoutes);
 
 
 
