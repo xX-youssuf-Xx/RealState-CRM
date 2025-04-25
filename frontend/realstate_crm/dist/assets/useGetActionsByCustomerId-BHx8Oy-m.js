@@ -1,1 +1,0 @@
-import{c as i,r as d}from"./index-D92RPh5s.js";const m=()=>{const{isLoading:a,error:s,data:c,setError:t,_execute:r}=i(),o=d.useCallback(async(n,u={})=>{try{return await r(`actions/customer/${n}`,"GET",null,u)}catch(e){throw t(e),e}},[r,t]);return{isLoading:a,error:s,data:c,execute:o,setError:t}};export{m as u};
