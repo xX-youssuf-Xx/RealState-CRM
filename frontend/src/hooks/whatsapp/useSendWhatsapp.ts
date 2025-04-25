@@ -16,8 +16,8 @@ interface SendWhatsappResponse {
   message: string;
 }
 
-// External WhatsApp service URL
-const WHATSAPP_SERVICE_URL = "http://74.243.246.228:3000/send-media-message"; // Replace with the actual external service URL
+// Backend WhatsApp API endpoint with production URL
+const WHATSAPP_API_ENDPOINT = "https://amaar.egypt-tech.com/api/whatsapp/send";
 
 // Payment method translations
 const paymentMethodTranslations: Record<string, string> = {
@@ -49,7 +49,13 @@ export const useSendWhatsapp = () => {
       const project = await fetchProject(unit.project_id);
       
       // Extract media URLs if available
-      const mediaUrls = unit.media ? unit.media.split(',') : [];
+      const mediaUrls = unit.media ? unit.media.split(',').map((url: string) => {
+        // Add the base URL to uploads paths
+        if (url.trim().startsWith('/uploads')) {
+          return `https://amaar.egypt-tech.com${url.trim()}`;
+        }
+        return url.trim();
+      }) : [];
       
       // Translate payment method to Arabic
       const paymentMethodArabic = unit.payment_method ? 
@@ -98,8 +104,16 @@ ${unit.payment_method === "INSTALLMENT" ? `
       // Fetch sales rep data
       const sales = params.salesId ? await fetchEmployee(params.salesId) : null;
 
-      // Making a direct call to the external WhatsApp service
-      const response = await fetch(`${WHATSAPP_SERVICE_URL}`, {
+      // Process media URLs to add base URL for uploads
+      const processedMediaUrls = (params.mediaUrls || []).map(url => {
+        if (url.startsWith('/uploads')) {
+          return `https://amaar.egypt-tech.com${url}`;
+        }
+        return url;
+      });
+
+      // Making a call to our backend API instead of directly to the external service
+      const response = await fetch(WHATSAPP_API_ENDPOINT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,7 +121,7 @@ ${unit.payment_method === "INSTALLMENT" ? `
         body: JSON.stringify({
           phoneNumber: params.clientPhoneNumber,
           message: params.customMessage,
-          media: params.mediaUrls || [],  // Send media URLs
+          media: processedMediaUrls,  // Use the processed media URLs
           sales: sales ? {
             id: sales.id,
             name: sales.name,

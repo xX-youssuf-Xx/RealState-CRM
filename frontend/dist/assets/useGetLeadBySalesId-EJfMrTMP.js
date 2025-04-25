@@ -1,1 +1,0 @@
-import{c as d,r as l}from"./index-Dw9eA6zH.js";const p=()=>{const{isLoading:r,error:s,data:c,setError:e,_execute:a}=d(),o=l.useCallback(async(n,u={})=>{try{return await a(`leads/salesperson/${n}`,"GET",null,u)}catch(t){throw e(t),t}},[a,e]);return{isLoading:r,error:s,data:c,execute:o,setError:e}};export{p as u};
