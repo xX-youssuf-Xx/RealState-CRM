@@ -49,15 +49,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     if (isAdmin && isAdminPasswordValid) {
       const token = jwt.sign(
-        { id: "admin", role: "ADMIN" },
+        { id: "1", role: "ADMIN" },
         jwtSecret,
-        { expiresIn: "30d" }
+        { expiresIn: "1y" }
       );
       res.status(200).json({
         token,
         employee: {
-          id: "admin",
-          name: "Administrator",
+          id: "1",
+          name: "Manager",
           role: "ADMIN",
           number: adminNumber,
         },

@@ -80,10 +80,18 @@ export const getLeadsByCampaign = async (req: Request, res: Response): Promise<v
 };
 
 export const createLead = async (req: Request, res: Response): Promise<void> => {
+  console.log('=== CREATE LEAD REQUEST START ===');
+  console.log('Request Method:', req.method);
+  console.log('Request Headers:', req.headers);
+  console.log('Request Body:', req.body);
+  
   try {
     // Validate required fields
     const { name, number, source } = req.body;
+    console.log('Extracted fields:', { name, number, source });
+    
     if (!name || !number || !source) {
+      console.log('Missing required fields');
       res.status(400).json({ 
         message: 'Missing required fields', 
         required: ['name', 'number', 'source'] 
@@ -91,13 +99,29 @@ export const createLead = async (req: Request, res: Response): Promise<void> => 
       return;
     }
     
-    const leadData = req.body as CreateLeadData; // Explicitly type the request body
+    console.log('Creating lead with data:', req.body);
+    const leadData = req.body as CreateLeadData;
     const newLead = await LeadModel.create(leadData);
+    console.log('Lead created successfully:', newLead);
+    
+    // Return the newly created lead with 201 status
     res.status(201).json(newLead);
-  } catch (error) {
-    console.error('Error creating lead:', error);
-    res.status(500).json({ message: 'Failed to create lead' });
+  } catch (error: any) {
+    console.error('Error in createLead:', error);
+    console.error('Error stack:', error.stack);
+    
+    if (error.message === 'Duplicate phone number found in the system') {
+      console.log('Duplicate phone number detected');
+      res.status(400).json({ 
+        message: 'Duplicate phone number found in the system',
+        error: 'DUPLICATE_PHONE'
+      });
+    } else {
+      console.log('Generic error occurred');
+      res.status(500).json({ message: 'Failed to create lead' });
+    }
   }
+  console.log('=== CREATE LEAD REQUEST END ===');
 };
 
 export const updateLead = async (req: Request, res: Response): Promise<void> => {

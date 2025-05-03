@@ -15,7 +15,7 @@ router.use(authenticate);
 
 // Only admins should be able to list, create, update, and delete employees (example authorization)
 router.get('/', authorize(['ADMIN','SALES']), getAllEmployees);
-router.get('/:id', authorize(['ADMIN']), getEmployeeById);
+router.get('/:id', authorize(['ADMIN','SALES']), getEmployeeById);
 router.post('/', authorize(['ADMIN']), createEmployee);
 router.patch('/:id', authorize(['ADMIN']), updateEmployee);
 router.delete('/:id', authorize(['ADMIN']), deleteEmployee);

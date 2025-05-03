@@ -35,14 +35,35 @@ export class LeadModel {
     return result.rows;
   }
   
+  static async getByPhoneNumber(number: string): Promise<Lead | null> {
+    const result = await db.query('SELECT * FROM leads WHERE number = $1', [number]);
+    return result.rows[0] || null;
+  }
+
   static async create(lead: Omit<Lead, 'id' | 'created_at' | 'updated_at' | 'sales_id'>): Promise<Lead> {
+    console.log('=== LEAD MODEL CREATE START ===');
+    console.log('Received lead data:', lead);
+    
     const { name, number, source, address, state, substate, budget, notes, is_created_by_sales, notification_id, campaign } = lead;
     
+    // Check if phone number already exists
+    console.log('Checking for existing phone number:', number);
+    const existingLead = await LeadModel.getByPhoneNumber(number);
+    if (existingLead) {
+      console.log('Found existing lead with same number:', existingLead);
+      throw new Error('Duplicate phone number found in the system');
+    }
+    console.log('No duplicate phone number found');
+    
     // Get next sales ID with robust error handling
+    console.log('Getting next sales employee ID');
     let salesId;
     try {
       salesId = await getNextSalesEmployeeId();
+      console.log('Assigned sales ID:', salesId);
+      
       if (salesId === null || salesId === undefined) {
+        console.error('Failed to get valid sales employee ID');
         throw new Error('Failed to get a valid sales employee ID');
       }
     } catch (error) {
@@ -50,10 +71,14 @@ export class LeadModel {
       throw new Error('Lead creation failed: Unable to assign sales employee');
     }
 
+    console.log('Inserting new lead into database');
     const result = await db.query(
       'INSERT INTO leads (name, number, source, address, state, substate, sales_id, budget, notes, is_created_by_sales, notification_id, campaign) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
       [name, number, source, address, state, substate, salesId, budget, notes, is_created_by_sales, notification_id, campaign]
     );
+    
+    console.log('Database insert result:', result.rows[0]);
+    console.log('=== LEAD MODEL CREATE END ===');
     return result.rows[0];
   }
 
