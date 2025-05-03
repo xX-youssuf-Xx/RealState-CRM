@@ -34,8 +34,8 @@ export const formatDate = (date: string | Date): string => {
   if (!date) return '';
   const d = new Date(date);
   
-  // Calculate Cairo timezone offset (UTC+2)
-  const cairoDate = new Date(d.getTime() + (2 * 60 * 60 * 1000));
+  // Calculate Cairo timezone offset (UTC+2) and add 1 hour
+  const cairoDate = new Date(d.getTime() + (3 * 60 * 60 * 1000)); // Changed from 2 to 3 hours
   
   const day = cairoDate.getUTCDate().toString().padStart(2, '0');
   const month = (cairoDate.getUTCMonth() + 1).toString().padStart(2, '0');

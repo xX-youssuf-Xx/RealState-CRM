@@ -41,11 +41,8 @@ export const useUpdateUnit = () => {
           })
         }
 
-        // Add a field to indicate if files are being updated
-        formData.append('update_media', mediaFiles ? 'true' : 'false')
-
         // Make the API call with formData
-        const response = await _execute(`units/${unitId}`, "PUT", formData, {
+        const response = await _execute(`units/${unitId}`, "PATCH", formData, {
           headers: {
             // Don't set Content-Type - browser will set it with proper boundary
           }

@@ -377,12 +377,12 @@ const LeadActions: React.FC = () => {
 
     // If CLOSED_WON, update the unit status and project sold count
     if (newAction.newState === "CLOSED_WON" && newAction.unitId && newAction.projectId) {
-      const today = new Date().toISOString().split("T")[0]
+      const today = new Date().toISOString()
 
       // Update only the status and sold_date fields of the unit
       await updateUnit(newAction.unitId, {
         status: "SOLD",
-        sold_date: today,
+        sold_date: today
       })
 
       // Update the project's sold count
@@ -1312,7 +1312,7 @@ const LeadActions: React.FC = () => {
                         <div className={styles.mediaThumbnails}>
                           {sendUnitForm.mediaUrls.map((url, index) => (
                             <div key={index} className={styles.mediaThumbnail}>
-                              <img src={"https://amaar.egypt-tech.com"+url} alt={`صورة ${index + 1}`} />
+                              <img src={url} alt={`صورة ${index + 1}`} />
                             </div>
                           ))}
                   

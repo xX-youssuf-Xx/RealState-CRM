@@ -1,0 +1,1 @@
+import{c as l,r as p}from"./index-CTUOLzox.js";const d=()=>{const{isLoading:a,error:s,data:o,setError:e,_execute:r}=l(),c=p.useCallback(async(n,u={})=>{try{return await r(`employees/${n}`,"GET",null,u)}catch(t){throw e(t),t}},[r,e]);return{isLoading:a,error:s,data:o,execute:c,setError:e}};export{d as u};
